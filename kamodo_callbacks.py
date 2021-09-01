@@ -4,12 +4,12 @@ import dash_bootstrap_components as dbc
 
 
 def update_menubar_details(active_tab):
-    if active_tab == "tab-1":
-        return "tab1_content"
-    elif active_tab == "tab-2":
-        return "tab2_content"
-    elif active_tab == "tab-3":
-        return "tab3_content"
-    elif active_tab == "tab-4":
-        return "tab4_content"
+    if active_tab == "workflow_tab":
+        return "WORKFLOW TAB"
+    elif active_tab == "models_tab":
+        return "MODELS TAB"
+    elif active_tab == "datasets_tab":
+        return "DATASETS TAB"
+    elif active_tab == "editor_tab":
+        return "EDITOR TAB"
     return html.P("This shouldn't ever be displayed...")

@@ -29,7 +29,8 @@ header:
           children:
             - dbc.Col:
                 width: 1
-                children: LOGO
+                children:
+                  - html.H3: LOGO
                 className: logo
             - dbc.Col:
                 width: 11
@@ -45,18 +46,18 @@ side-menubar:
           children:
             - dbc.Tab:
                 label: Workflow
-                tab_id: tab-1
+                tab_id: workflow_tab
             - dbc.Tab:
                 label: Models
-                tab_id: tab-2
+                tab_id: models_tab
             - dbc.Tab:
                 label: Datasets
-                tab_id: tab-3
+                tab_id: datasets_tab
             - dbc.Tab:
                 label: Editor
-                tab_id: tab-4
+                tab_id: editor_tab
           id: SideMenuBarTabs
-          active_tab: tab-1
+          active_tab: workflow_tab
     className: justify-content-center side-menubar
 
 menubar-details:
@@ -79,7 +80,8 @@ content-section:
       - ${side-menubar}
       - ${menubar-details}
       - ${graph-section}
-    className: h-100
+    style:
+      height: 100vw
 
 layout:
     html.Div:

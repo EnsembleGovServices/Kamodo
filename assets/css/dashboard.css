@@ -1,5 +1,6 @@
 /* BODY STYLE START */
 body{
+    height: 100vw;
     padding: 0;
 }
 /* BODY STYLE END */
@@ -23,6 +24,39 @@ body{
 .side-menubar{
     color: white;
     background-color: black
+}
+
+.nav-tabs{
+    margin-top: 20%;
+    border-bottom: none;
+}
+
+.nav-item{
+    text-align: center;
+    width: 100%;
+}
+
+.nav-tabs .nav-item {
+    margin: 20% 0;
+}
+
+.nav-tabs .nav-item .nav-link.active {
+    color: white;
+    background-color: black;
+    border: 1px solid white;
+    border-radius: 0
+}
+
+.nav-tabs .nav-link:focus, .nav-tabs .nav-link:hover {
+    border: none
+}
+
+a{
+    color:white
+}
+
+a:hover{
+    color: white
 }
 /* SIDE MENU BAR STYLE END */
 
