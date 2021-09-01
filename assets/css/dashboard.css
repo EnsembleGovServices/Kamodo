@@ -1,0 +1,33 @@
+/* BODY STYLE START */
+body{
+    padding: 0;
+}
+/* BODY STYLE END */
+
+/* LOGO STYLE START */
+.logo{
+    color: white;
+    height: 59px;
+    background-color: black;
+}
+/* LOGO STYLE END */
+
+/* HEADER STYLE START */
+.header{
+    height: 59px;
+    background-color: #736F6F;
+}
+/* HEADER STYLE END */
+
+/* SIDE MENU BAR STYLE START */
+.side-menubar{
+    color: white;
+    background-color: black
+}
+/* SIDE MENU BAR STYLE END */
+
+/* GRAPH SECTION STYLE START */
+.graph-section{
+    background-color: #CAC9C9
+}
+/* GRAPH SECTION STYLE END */

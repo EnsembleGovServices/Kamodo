@@ -1,0 +1,105 @@
+import:
+  dcc: dash_core_components
+  html: dash_html_components
+  dbc: dash_bootstrap_components
+
+external_stylesheets:
+#  - https://codepen.io/chriddyp/pen/bWLwgP.css
+  - https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css
+  - assets/css/dashboard.css
+
+external_scripts:
+  - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML
+  - https://code.jquery.com/jquery-3.2.1.slim.min.js
+  - https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js
+  - https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js
+
+app:
+  jupyter_dash.JupyterDash:
+    external_stylesheets: ${external_stylesheets}
+    external_scripts: ${external_scripts}
+    # suppress_callback_exceptions: True
+    title: kamodo-dashboard
+
+
+header:
+  html.Div:
+    children:
+      - dbc.Row:
+          children:
+            - dbc.Col:
+                width: 1
+                children: LOGO
+                className: logo
+            - dbc.Col:
+                width: 11
+                children: HEADER
+                className: header
+
+
+side-menubar:
+  dbc.Col:
+    width: 1
+    children:
+      - dbc.Tabs:
+          children:
+            - dbc.Tab:
+                label: Workflow
+                tab_id: tab-1
+            - dbc.Tab:
+                label: Models
+                tab_id: tab-2
+            - dbc.Tab:
+                label: Datasets
+                tab_id: tab-3
+            - dbc.Tab:
+                label: Editor
+                tab_id: tab-4
+          id: SideMenuBarTabs
+          active_tab: tab-1
+    className: justify-content-center side-menubar
+
+menubar-details:
+  dbc.Col:
+    width: 3
+    children:
+      - html.Div:
+          id: content
+    className: justify-content-center menubar-details
+
+graph-section:
+  dbc.Col:
+    width: 8
+    children: GRAPH SECTION
+    className: graph-section
+
+content-section:
+  dbc.Row:
+    children:
+      - ${side-menubar}
+      - ${menubar-details}
+      - ${graph-section}
+    className: h-100
+
+layout:
+    html.Div:
+      children:
+        - html.Div:
+            children:
+              - ${header}
+              - ${content-section}
+            className: container-fluid h-100
+      className: kamodo-dashboard
+
+
+
+callbacks:
+  compute:
+    output:
+    - id: content
+      attr: children
+    input:
+    - id: SideMenuBarTabs
+      attr: active_tab
+    callback: kamodo_callbacks.update_menubar_details
+
