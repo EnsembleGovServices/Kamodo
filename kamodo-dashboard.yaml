@@ -68,6 +68,19 @@ menubar-details:
           id: content
     className: justify-content-center menubar-details
 
+
+#workflow-cards:
+#  html.Div:
+#    children:
+#      - dbc.Card:
+#          children:
+#            - dbc.CardImg:
+#                src: assets/images/satelite.png
+#            - dbc.CardBody:
+#                children:
+#                  - html.H3: Satelite Fly Through
+#    className: container
+
 graph-section:
   dbc.Col:
     width: 8

@@ -36,8 +36,12 @@ body{
     width: 100%;
 }
 
+.nav-link{
+    padding:5% 0;
+}
+
 .nav-tabs .nav-item {
-    margin: 20% 0;
+    margin: 40% 0;
 }
 
 .nav-tabs .nav-item .nav-link.active {
@@ -51,6 +55,10 @@ body{
     border: none
 }
 
+.nav-tabs .nav-link:focus, .nav-tabs .nav-link:active {
+    border: none
+}
+
 a{
     color:white
 }
@@ -60,8 +68,28 @@ a:hover{
 }
 /* SIDE MENU BAR STYLE END */
 
+/* WORKFLOW CARDS STYLE START */
+
+.card{
+    margin-bottom: 5%;
+    border: none;
+    background: #C4C4C4;
+
+}
+
+.workflow-title {
+    margin: 5% 0;
+}
+
+.workflow-header{
+    padding-top: 25%;
+}
+
+/* WORKFLOW CARDS STYLE END */
+
 /* GRAPH SECTION STYLE START */
 .graph-section{
     background-color: #CAC9C9
 }
 /* GRAPH SECTION STYLE END */
+
