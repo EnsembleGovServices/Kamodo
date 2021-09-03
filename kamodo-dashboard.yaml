@@ -69,18 +69,6 @@ menubar-details:
     className: justify-content-center menubar-details
 
 
-#workflow-cards:
-#  html.Div:
-#    children:
-#      - dbc.Card:
-#          children:
-#            - dbc.CardImg:
-#                src: assets/images/satelite.png
-#            - dbc.CardBody:
-#                children:
-#                  - html.H3: Satelite Fly Through
-#    className: container
-
 graph-section:
   dbc.Col:
     width: 8
@@ -109,7 +97,7 @@ layout:
 
 
 callbacks:
-  compute:
+  sidemenubar_callback:
     output:
     - id: content
       attr: children
@@ -118,3 +106,27 @@ callbacks:
       attr: active_tab
     callback: kamodo_callbacks.update_menubar_details
 
+
+  model_callback:
+    output:
+    - id: collapse-1
+      attr: is_open
+    - id: collapse-2
+      attr: is_open
+    - id: collapse-3
+      attr: is_open
+    input:
+    - id: group-1-toggle
+      attr: n_clicks
+    - id: group-2-toggle
+      attr: n_clicks
+    - id: group-3-toggle
+      attr: n_clicks
+    state:
+    - id: collapse-1
+      attr: is_open
+    - id: collapse-2
+      attr: is_open
+    - id: collapse-3
+      attr: is_open
+    callback: kamodo_callbacks.toggle_accordion
