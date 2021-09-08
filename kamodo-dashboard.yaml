@@ -10,9 +10,12 @@ external_stylesheets:
 
 external_scripts:
   - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML
-  - https://code.jquery.com/jquery-3.2.1.slim.min.js
+  - assets/js/dashboard.js
+  - https://code.jquery.com/jquery-3.6.0.js
+  - https://code.jquery.com/ui/1.12.1/jquery-ui.js
   - https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js
   - https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js
+
 
 app:
   jupyter_dash.JupyterDash:
@@ -68,12 +71,49 @@ menubar-details:
           id: content
     className: justify-content-center menubar-details
 
+menubar-details-slider:
+  dbc.Col:
+    width: 3
+    childre:
+      - html.Div:
+          children:
+            - html.H1: I AM IN SLIDER
+          id: slider-content
+    className: justify-content-center menubar-details-slider
+    id: menubar-details-slider
+
+
+graph:
+  dbc.Row:
+    children:
+      - dbc.Col:
+          children:
+            - dbc.Button:
+                children: PLOT
+                id: plot-graph
+                className: mr-1 plot-graph
+                color: primary
+                size: md
+                n_clicks: 0
+            - dbc.Button:
+                children: REMOVE
+                id: remove-graph
+                className: mr-1 remove-graph
+                color: primary
+                size: md
+                n_clicks: 0
+            - html.Div:
+                id: kamodo-graph
+                className: kamodo-graph
+
 
 graph-section:
   dbc.Col:
-    width: 8
-    children: GRAPH SECTION
+    children:
+      - ${graph}
     className: graph-section
+    width: 8
+#    id: graph-section
 
 content-section:
   dbc.Row:
@@ -99,34 +139,47 @@ layout:
 callbacks:
   sidemenubar_callback:
     output:
-    - id: content
-      attr: children
+      - id: content
+        attr: children
     input:
-    - id: SideMenuBarTabs
-      attr: active_tab
+      - id: SideMenuBarTabs
+        attr: active_tab
     callback: kamodo_callbacks.update_menubar_details
 
 
   model_callback:
     output:
-    - id: collapse-1
-      attr: is_open
-    - id: collapse-2
-      attr: is_open
-    - id: collapse-3
-      attr: is_open
+      - id: collapse-1
+        attr: is_open
+      - id: collapse-2
+        attr: is_open
+      - id: collapse-3
+        attr: is_open
     input:
-    - id: group-1-toggle
-      attr: n_clicks
-    - id: group-2-toggle
-      attr: n_clicks
-    - id: group-3-toggle
-      attr: n_clicks
+      - id: group-1-toggle
+        attr: n_clicks
+      - id: group-2-toggle
+        attr: n_clicks
+      - id: group-3-toggle
+        attr: n_clicks
     state:
-    - id: collapse-1
-      attr: is_open
-    - id: collapse-2
-      attr: is_open
-    - id: collapse-3
-      attr: is_open
+      - id: collapse-1
+        attr: is_open
+      - id: collapse-2
+        attr: is_open
+      - id: collapse-3
+        attr: is_open
     callback: kamodo_callbacks.toggle_accordion
+
+  graph_graph:
+    output:
+      - id: kamodo-graph
+        attr: children
+    input:
+      - id: plot-graph
+        attr: n_clicks
+      - id: remove-graph
+        attr: n_clicks
+    callback: kamodo_callbacks.graph_function
+
+

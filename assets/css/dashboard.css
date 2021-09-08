@@ -185,9 +185,59 @@ a:hover{
 
 /* MODELS CARDS STYLE END*/
 
+/* ACCORDION STYLE START*/
+.accordion{
+    width: 100%
+}
+
+#collapse-1, #collapse-2, #collapse-3{
+    background: #C4C4C4;
+    margin-bottom: 5%
+}
+/* ACCORDION STYLE END */
+
+/* CTIPe MODEL STYLE START*/
+.ctipe-details{
+    padding: 5% 7%;
+}
+/* CTIPe MODEL STYLE START*/
+
+/* MENU BAR DETAILS SLIDER STYLE START  */
+
+.menubar-details-slider{
+    width: 0;
+    transition-duration: 0.5s;
+}
+
+.menubar-details-slider-show{
+    width:100%;
+
+}
+
+/* MENU BAR DETAILS SLIDER STYLE END */
+
+
 /* GRAPH SECTION STYLE START */
 .graph-section{
     background-color: #CAC9C9
 }
 /* GRAPH SECTION STYLE END */
 
+/* GRAPH STYLE START */
+.kamodo-graph{
+    padding:5%
+}
+
+#my-graph-empty{
+    height: 400px;
+    width: 700px;
+}
+
+#my-graph{
+    width: 100%
+}
+
+.main-svg{
+    width: 100%
+}
+/* GRAPH STYLE END */
