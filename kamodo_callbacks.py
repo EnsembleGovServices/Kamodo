@@ -105,124 +105,64 @@ ctipe_details = html.Div([
 ], className="ctipe-details")
 
 
-def make_item(i):
-    if i == 3:
-        return html.Div([
-            dbc.Button(
-                [
-                    dbc.Card([
-                        dbc.Row([
-                            dbc.Col(
-                                [
-                                    html.H1("IRI", className="model-header")
-                                ],
-                                lg=6,
-                            ),
-                            dbc.Col(
-                                [
-                                    dbc.CardBody(
-                                        [
-                                            dbc.ListGroup(
-                                                [
-                                                    dbc.ListGroupItem("Lonosphere", className="model-type-name"),
-                                                ], className="model-types iri-list-group")
-                                        ]
-                                    ),
-                                ],
-                                lg=6,
-                            ),
-                        ])
-                    ], className="iri-card model-card", id="iri-card")
-                ],
-                id=f"group-3-toggle",
-                className="iri-collapse-button",
-                n_clicks=0,
-            ),
-            dbc.Collapse([
-                ctipe_details
-            ], id=f"collapse-3", className='container', is_open=False)
-        ], className='model-accordion-card')
-
-    elif i == 2:
-        return html.Div([
-            dbc.Button(
-                [
-                    dbc.Card([
-                        dbc.Row([
-                            dbc.Col(
-                                [
-                                    html.H1("GITM", className="model-header")
-                                ],
-                                lg=6,
-                            ),
-                            dbc.Col(
-                                [
-                                    dbc.CardBody(
-                                        [
-                                            dbc.ListGroup(
-                                                [
-                                                    dbc.ListGroupItem("Thermosphere", className="model-type-name"),
-                                                    dbc.ListGroupItem("Lonosphere", className="model-type-name"),
-                                                ], className="model-types gitm-list-group")
-                                        ]
-                                    ),
-                                ],
-                                lg=6,
-                            ),
-                        ])
-                    ], className="gitm-card model-card", id="gitm-card"),
-                ],
-                id=f"group-2-toggle",
-                className="gitm-collapse-button",
-                n_clicks=0,
-            ),
-            dbc.Collapse([
-                ctipe_details
-            ], id=f"collapse-2", className='container', is_open=False)
-        ], className='model-accordion-card')
-
-    elif i == 1:
-        return html.Div([dbc.Button(
+def get_model_types(model_name):
+    if model_name == "CTIPe":
+        return dbc.ListGroup(
             [
-                dbc.Card([
-                    dbc.Row([
-                        dbc.Col(
-                            [
-                                html.H1("CTIPe", className="model-header")
-                            ],
-                            lg=6,
-                        ),
-                        dbc.Col(
-                            [
-                                dbc.CardBody(
-                                    [
-                                        dbc.ListGroup(
-                                            [
-                                                dbc.ListGroupItem("Couple", className="model-type-name"),
-                                                dbc.ListGroupItem("Thermosphere", className="model-type-name"),
-                                                dbc.ListGroupItem("Lonosphere", className="model-type-name"),
-                                                dbc.ListGroupItem("Plasmasphere", className="model-type-name"),
-                                            ], className="model-types ctipe-list-group")
-                                    ]
-                                ),
-                            ],
-                            lg=6,
-                        ),
-                    ]),
-                ], className="ctipe-card model-card", id="ctipe-card"),
-            ],
-            id=f"group-1-toggle",
-            className="ctipe-collapse-button",
-            n_clicks=0,
-        ),
-            dbc.Collapse([
-                ctipe_details
-            ], id=f"collapse-1", className='container', is_open=False)
-        ], className='model-accordion-card')
+                dbc.ListGroupItem("Couple", className="model-type-name"),
+                dbc.ListGroupItem("Thermosphere", className="model-type-name"),
+                dbc.ListGroupItem("Lonosphere", className="model-type-name"),
+                dbc.ListGroupItem("Plasmasphere", className="model-type-name"),
+            ], className=f"model-types {model_name}-list-group")
+    elif model_name == "GITM":
+        return dbc.ListGroup(
+            [
+                dbc.ListGroupItem("Thermosphere", className="model-type-name"),
+                dbc.ListGroupItem("Lonosphere", className="model-type-name"),
+            ], className=f"model-types {model_name}-list-group")
+    else:
+        return dbc.ListGroup(
+            [
+                dbc.ListGroupItem("Lonosphere", className="model-type-name"),
+            ], className=f"model-types {model_name}-list-group")
+
+
+def make_model_card(model_name):
+    return html.Div([dbc.Button(
+        [
+            dbc.Card([
+                dbc.Row([
+                    dbc.Col(
+                        [
+                            html.H1(f"{model_name}", className="model-header")
+                        ],
+                        lg=6,
+                    ),
+                    dbc.Col(
+                        [
+                            dbc.CardBody(
+                                [
+                                    get_model_types(model_name)
+                                ]
+                            ),
+                        ],
+                        lg=6,
+                    ),
+                ]),
+            ], className=f"{model_name}-card model-card", id=f"{model_name}-card"),
+        ],
+        id=f"{model_name}-toggle",
+        className=f"{model_name}-collapse-button",
+        n_clicks=0,
+    ),
+        dbc.Collapse([
+            ctipe_details
+        ], id=f"collapse-{model_name}", className='container', is_open=False)
+    ], className='model-accordion-card')
 
 
 accordion = html.Div(
-    [make_item(1), make_item(2), make_item(3)], className="accordion", id="accordion"
+    [make_model_card('CTIPe'), make_model_card('GITM'), make_model_card('IRI')], className="accordion", id="accordion"
 )
 
 model_cards = html.Div(
@@ -257,13 +197,7 @@ def update_menubar_details(active_tab):
     return html.P("This shouldn't ever be displayed...")
 
 
-def expand_model_card(n, is_open):
-    if n:
-        return not is_open
-    return is_open
-
-
-def toggle_accordion(n1, n2, n3, is_open1, is_open2, is_open3):
+def toggle_model_cards_accordion(n1, n2, n3, is_open1, is_open2, is_open3):
     ctx = dash.callback_context
 
     if not ctx.triggered:
@@ -271,39 +205,97 @@ def toggle_accordion(n1, n2, n3, is_open1, is_open2, is_open3):
     else:
         button_id = ctx.triggered[0]["prop_id"].split(".")[0]
 
-    if button_id == "group-1-toggle" and n1:
+    if button_id == "CTIPe-toggle" and n1:
         return not is_open1, False, False
-    elif button_id == "group-2-toggle" and n2:
+    elif button_id == "GITM-toggle" and n2:
         return False, not is_open2, False
-    elif button_id == "group-3-toggle" and n3:
+    elif button_id == "IRI-toggle" and n3:
         return False, False, not is_open3
     return False, False, False
 
 
-def graph_function(n1, n2):
-    ctx = dash.callback_context
+# PLOT DYNAMICALLY START #
+
+def make_graph(button_id):
+    plot_function_name = button_id.split('-')[0]
+    k = KamodoAPI(PYSAT_URL)
     graph = dcc.Graph(
         id='my-graph',
+        figure=k.plot(plot_function_name),
+    )
+    return graph
+
+
+def graph_function(n1, n2, n3, n4, n5, n6, n7, n8, n9, n10, n11, n12, n13, n14, n15, remove, children):
+    ctx = dash.callback_context
+    new_graph = dcc.Graph(
+        id='my-graph-empty',
         figure={}
     )
-
     if not ctx.triggered:
-        return graph
+        return new_graph
     else:
         button_id = ctx.triggered[0]["prop_id"].split(".")[0]
 
-    if button_id == "plot-graph" and n1:
-        print(f"PLOT GRAPH {n1}")
-        k = KamodoAPI(PYSAT_URL)
-        graph = dcc.Graph(
-            id='my-graph',
-            figure=k.plot('B_north'),
-        )
-        return graph
-    elif button_id == "remove-graph" and n2:
+    if button_id == "B_north-button" and n1:
+        return make_graph(button_id)
+    elif button_id == "B_up-button" and n2:
+        return make_graph(button_id)
+    elif button_id == "B_west-button" and n3:
+        return make_graph(button_id)
+    elif button_id == "B_IGRF_north-button" and n4:
+        return make_graph(button_id)
+    elif button_id == "B_IGRF_up-button" and n5:
+        return make_graph(button_id)
+    elif button_id == "B_IGRF_west-button" and n6:
+        return make_graph(button_id)
+    elif button_id == "latitude-button" and n7:
+        return make_graph(button_id)
+    elif button_id == "longitude-button" and n8:
+        return make_graph(button_id)
+    elif button_id == "altitude-button" and n9:
+        return make_graph(button_id)
+    elif button_id == "dB_zon-button" and n10:
+        return make_graph(button_id)
+    elif button_id == "dB_mer-button" and n11:
+        return make_graph(button_id)
+    elif button_id == "bB_par-button" and n12:
+        return make_graph(button_id)
+    elif button_id == "year-button" and n13:
+        return make_graph(button_id)
+    elif button_id == "dayofyear-button" and n14:
+        return make_graph(button_id)
+    elif button_id == "B_flag-button" and n15:
+        return make_graph(button_id)
+
+    elif button_id == "remove-graph" and remove:
         print(f"REMOVE GRAPH {n2}")
-        new_graph = dcc.Graph(
-            id='my-graph-empty',
-            figure={},
-        )
         return new_graph
+
+# PLOT DYNAMICALLY END #
+
+# MODEL NAME LIST START #
+
+def get_selected_model_names(n_clicks):
+    if n_clicks not in [0, None]:
+        k = KamodoAPI(PYSAT_URL)
+        model_list = []
+        for i in k:
+            if '(' not in str(i):
+                model_list.append(
+                    dbc.ListGroup(
+                        [
+                            dbc.ListGroupItem(
+                                f"{i}", className=f"model-type-button {i}-plot", id=f"{i}-button", n_clicks=0,
+                                action=True
+                            ),
+                        ]
+                    )
+                )
+        return dbc.ListGroup(model_list, className="model-type-list")
+
+# MODEL NAME LIST END #
+
+
+
+

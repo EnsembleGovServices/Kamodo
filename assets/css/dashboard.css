@@ -3,7 +3,19 @@ body{
     height: 100vw;
     padding: 0;
 }
+
 /* BODY STYLE END */
+
+/*Remove the scrollbar from Chrome, Safari, Edge and IE*/
+/*::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+}
+
+* {
+  -ms-overflow-style: none !important;
+}*/
+
 
 /* LOGO STYLE START */
 .logo{
@@ -20,7 +32,7 @@ body{
 }
 /* HEADER STYLE END */
 
-/* SIDE MENU BAR STYLE START */
+/* SIDE NAV BAR STYLE START */
 .side-menubar{
     color: white;
     background-color: black
@@ -66,9 +78,15 @@ a{
 a:hover{
     color: white
 }
-/* SIDE MENU BAR STYLE END */
+/* SIDE NAV BAR STYLE END */
 
 /* WORKFLOW CARDS STYLE START */
+
+.menubar-details{
+    height: 100vh;
+    overflow-y: auto;
+}
+
 
 .workflow-card{
     width: 100%;
@@ -190,7 +208,7 @@ a:hover{
     width: 100%
 }
 
-#collapse-1, #collapse-2, #collapse-3{
+#collapse-CTIPe, #collapse-GITM, #collapse-IRI{
     background: #C4C4C4;
     margin-bottom: 5%
 }
@@ -219,7 +237,9 @@ a:hover{
 
 /* GRAPH SECTION STYLE START */
 .graph-section{
-    background-color: #CAC9C9
+    background-color: #CAC9C9;
+    width: 100vh;
+    overflow-y: scroll;
 }
 /* GRAPH SECTION STYLE END */
 
@@ -241,3 +261,25 @@ a:hover{
     width: 100%
 }
 /* GRAPH STYLE END */
+
+/* MODEL TYPE LIST STYLE START */
+
+.model-types-section{
+    height: 100vh;
+    overflow-y: scroll;
+}
+
+.model-type-section-header{
+    text-align: center;
+    margin: 10% 0;
+}
+
+.model-type-list {
+    width: 100%;
+    text-align: center;
+}
+
+.model-type-button{
+    padding: 5%
+}
+/* MDOEL TYPE LIST STYLE END */
