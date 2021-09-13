@@ -286,15 +286,19 @@ def get_selected_model_names(n_clicks):
     if n_clicks not in [0, None]:
         k = KamodoAPI(PYSAT_URL)
         model_list = []
-        for i in k:
+        for index, i in enumerate(k):
             if '(' not in str(i):
                 model_list.append(
                     dbc.ListGroup(
                         [
                             dbc.ListGroupItem(
-                                f"{i}", className=f"model-type-button {i}-plot", id=f"{i}-button", n_clicks=0,
+                                f"{i}", id={'type': 'model-plot-button', 'index': index//2}, n_clicks=0,
                                 action=True
                             ),
+                            # dbc.ListGroupItem(
+                            #     f"{i}", className=f"model-type-button {i}-plot", id= f'{i}-button', n_clicks=0,
+                            #     action=True
+                            # ),
                         ]
                     )
                 )
@@ -306,6 +310,15 @@ def get_selected_model_names(n_clicks):
 
 def plot_custom_function(input_value, data_value):
     print(f" INPUT: {input_value} DATA: {data_value}")
+
 # CUSTOM FUNCTION PLOTTING END #
 
 
+
+# TESTING GRAPH FUNCTION START #
+
+def graph_function_testing(n_clicks, id):
+    print("HELLO")
+    print(f"INPUT : {n_clicks} id: {id['index']}")
+
+# TESTING GRAPH FUNCTION END #

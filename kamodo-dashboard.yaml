@@ -24,15 +24,6 @@ app:
     title: kamodo-dashboard
     suppress_callback_exceptions: True
 
-#app:
-#  dash_extensions.enrich.DashProxy:
-#    external_stylesheets: ${external_stylesheets}
-#    external_scripts: ${external_scripts}
-#    title: kamodo-dashboard
-#    prevent_initial_callbacks: True
-#    transforms:
-#      - dash_extensions.enrich.MultiplexerTransform:
-
 
 header:
   html.Div:
@@ -234,48 +225,61 @@ callbacks:
         attr: is_open
     callback: kamodo_callbacks.toggle_model_cards_accordion
 
+#  plot_graph:
+#    output:
+#      - id: kamodo-graph
+#        attr: children
+#    input:
+#      - id: custom-function-input      # I AM TAKING INPUT VALUES HERE FOR CUSTOM GENERATION
+#        attr: value
+#      - id: custom-function-data        # DATA FOR THAT CUSTOM FUNCTION
+#        attr: value
+#      - id: B_north-button            # FROM THIS ALL PYSAT MODEL NAMES
+#        attr: n_clicks
+#      - id: B_up-button
+#        attr: n_clicks
+#      - id: B_west-button
+#        attr: n_clicks
+#      - id: B_IGRF_north-button
+#        attr: n_clicks
+#      - id: B_IGRF_up-button
+#        attr: n_clicks
+#      - id: B_IGRF_west-button
+#        attr: n_clicks
+#      - id: latitude-button
+#        attr: n_clicks
+#      - id: longitude-button
+#        attr: n_clicks
+#      - id: altitude-button
+#        attr: n_clicks
+#      - id: dB_zon-button
+#        attr: n_clicks
+#      - id: dB_mer-button
+#        attr: n_clicks
+#      - id: dB_par-button
+#        attr: n_clicks
+#      - id: year-button
+#        attr: n_clicks
+#      - id: dayofyear-button
+#        attr: n_clicks
+#      - id: B_flag-button
+#        attr: n_clicks
+#      - id: remove-graph
+#        attr: n_clicks
+#    callback: kamodo_callbacks.graph_function
+
   plot_graph:
     output:
       - id: kamodo-graph
         attr: children
     input:
-      - id: custom-function-input      # I AM TAKING INPUT VALUES HERE FOR CUSTOM GENERATION
-        attr: value
-      - id: custom-function-data        # DATA FOR THAT CUSTOM FUNCTION
-        attr: value
-      - id: B_north-button            # FROM THIS ALL PYSAT MODEL NAMES
+      - id: {'type': 'model-plot-button', 'index': MATCH}
         attr: n_clicks
-      - id: B_up-button
-        attr: n_clicks
-      - id: B_west-button
-        attr: n_clicks
-      - id: B_IGRF_north-button
-        attr: n_clicks
-      - id: B_IGRF_up-button
-        attr: n_clicks
-      - id: B_IGRF_west-button
-        attr: n_clicks
-      - id: latitude-button
-        attr: n_clicks
-      - id: longitude-button
-        attr: n_clicks
-      - id: altitude-button
-        attr: n_clicks
-      - id: dB_zon-button
-        attr: n_clicks
-      - id: dB_mer-button
-        attr: n_clicks
-      - id: dB_par-button
-        attr: n_clicks
-      - id: year-button
-        attr: n_clicks
-      - id: dayofyear-button
-        attr: n_clicks
-      - id: B_flag-button
-        attr: n_clicks
-      - id: remove-graph
-        attr: n_clicks
-    callback: kamodo_callbacks.graph_function
+    state:
+      - id: {'type': 'model-plot-button', 'index': MATCH}
+        attr: id
+    callback: kamodo_callbacks.graph_function_testing
+
 
   model_names:
     output:
