@@ -21,8 +21,17 @@ app:
   jupyter_dash.JupyterDash:
     external_stylesheets: ${external_stylesheets}
     external_scripts: ${external_scripts}
-    # suppress_callback_exceptions: True
     title: kamodo-dashboard
+    suppress_callback_exceptions: True
+
+#app:
+#  dash_extensions.enrich.DashProxy:
+#    external_stylesheets: ${external_stylesheets}
+#    external_scripts: ${external_scripts}
+#    title: kamodo-dashboard
+#    prevent_initial_callbacks: True
+#    transforms:
+#      - dash_extensions.enrich.MultiplexerTransform:
 
 
 header:
@@ -92,16 +101,58 @@ graph:
                 size: md
                 n_clicks: 0
             - html.Div:
+                children:
+                  - dcc.Graph:
+                      id: my-graph-empty
                 id: kamodo-graph
                 className: kamodo-graph
+    className: graph-container
+
+custom-function-graph:
+  html.Div:
+    children:
+      - dbc.Row:
+          children:
+            - html.Div:
+                children:
+                  - html.H1:
+                      children: Plot Custom Function
+                      className: custom-function-header
+                className: function-header-area
+          className: justify-content-center
+      - dbc.Row:
+          children:
+            - dbc.Col:
+                children:
+                  - dbc.Input:
+                      placeholder: Enter your function here...
+                      bs_size: lg
+                      id: custom-function-input
+                      className: mb-3 custom-function-input
+                width: 12
+          className: justify-content-center
+      - dbc.Row:
+          children:
+            - dbc.Col:
+                children:
+                  - dbc.Input:
+                      placeholder: Enter your data here...
+                      bs_size: lg
+                      id: custom-function-data
+                      className: mb-3 custom-function-data
+                width: 12
+          className: justify-content-center
+    className: container custom-function-container
 
 graph-section:
   dbc.Col:
     children:
       - ${graph}
+      - ${custom-function-graph}
     className: graph-section
     id: graph-section
     width: 6
+
 
 
 model-list:
@@ -187,11 +238,12 @@ callbacks:
     output:
       - id: kamodo-graph
         attr: children
-    state:
-      - id: kamodo-graph
-        attr: children
     input:
-      - id: B_north-button
+      - id: custom-function-input      # I AM TAKING INPUT VALUES HERE FOR CUSTOM GENERATION
+        attr: value
+      - id: custom-function-data        # DATA FOR THAT CUSTOM FUNCTION
+        attr: value
+      - id: B_north-button            # FROM THIS ALL PYSAT MODEL NAMES
         attr: n_clicks
       - id: B_up-button
         attr: n_clicks
@@ -233,3 +285,15 @@ callbacks:
       - id: CTIPe-toggle
         attr: n_clicks
     callback: kamodo_callbacks.get_selected_model_names
+
+
+#  custom_function:
+#    output:
+#      - id: kamodo-graph
+#        attr: children
+#    input:
+#      - id: custom-function-input
+#        attr: value
+#      - id: custom-function-data
+#        attr: value
+#    callback: kamodo_callbacks.plot_custom_function

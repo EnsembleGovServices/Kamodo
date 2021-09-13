@@ -221,12 +221,13 @@ def make_graph(button_id):
     k = KamodoAPI(PYSAT_URL)
     graph = dcc.Graph(
         id='my-graph',
+        className= plot_function_name + '-my-graph',
         figure=k.plot(plot_function_name),
     )
     return graph
 
 
-def graph_function(n1, n2, n3, n4, n5, n6, n7, n8, n9, n10, n11, n12, n13, n14, n15, remove, children):
+def graph_function(input_value, data_value, n1, n2, n3, n4, n5, n6, n7, n8, n9, n10, n11, n12, n13, n14, n15, remove):
     ctx = dash.callback_context
     new_graph = dcc.Graph(
         id='my-graph-empty',
@@ -236,6 +237,10 @@ def graph_function(n1, n2, n3, n4, n5, n6, n7, n8, n9, n10, n11, n12, n13, n14, 
         return new_graph
     else:
         button_id = ctx.triggered[0]["prop_id"].split(".")[0]
+        print(f"PLOT GRAPH")
+
+    if input_value:
+        plot_custom_function(input_value, data_value)
 
     if button_id == "B_north-button" and n1:
         return make_graph(button_id)
@@ -267,9 +272,10 @@ def graph_function(n1, n2, n3, n4, n5, n6, n7, n8, n9, n10, n11, n12, n13, n14, 
         return make_graph(button_id)
     elif button_id == "B_flag-button" and n15:
         return make_graph(button_id)
-
     elif button_id == "remove-graph" and remove:
         print(f"REMOVE GRAPH {n2}")
+        return new_graph
+    else:
         return new_graph
 
 # PLOT DYNAMICALLY END #
@@ -296,6 +302,10 @@ def get_selected_model_names(n_clicks):
 
 # MODEL NAME LIST END #
 
+# CUSTOM FUNCTION PLOTTING START #
 
+def plot_custom_function(input_value, data_value):
+    print(f" INPUT: {input_value} DATA: {data_value}")
+# CUSTOM FUNCTION PLOTTING END #
 
 

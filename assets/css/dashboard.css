@@ -236,10 +236,9 @@ a:hover{
 
 
 /* GRAPH SECTION STYLE START */
-.graph-section{
+.graph-container{
     background-color: #CAC9C9;
-    width: 100vh;
-    overflow-y: scroll;
+    min-height: 600px;
 }
 /* GRAPH SECTION STYLE END */
 
@@ -283,3 +282,13 @@ a:hover{
     padding: 5%
 }
 /* MDOEL TYPE LIST STYLE END */
+
+/* CUSTOM FUNCTION STYLE START */
+.custom-function-container{
+       display: block;
+}
+
+.function-header-area{
+    margin: 2% 0;
+}
+/* CUSTOM FUNCTION STYLE START */
