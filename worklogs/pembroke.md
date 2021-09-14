@@ -1,3 +1,5 @@
+### 2021-09-13 23:07:53.794835: clock-out
+
 * addressed Dhruv question on MATCH keyword
 
 ### 2021-09-13 21:56:00.835284: clock-in
