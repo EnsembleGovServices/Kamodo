@@ -9,7 +9,7 @@ services:
       context: ./kamodo-core
       dockerfile: Dockerfile
     image: ensemblegov-kamodo-core
-    platform: linux/arm64/v8
+    platform: linux/arm64/v8 # aarch64-linux-gnu
     ports:
     - "8888:8888"
     volumes:
@@ -17,7 +17,7 @@ services:
         source: ${PWD}/kamodo-core
         target: /Kamodo
   kamodo-dashboard:
-    restart: unless-stopped
+    # restart: unless-stopped
     container_name: kamodo-dashboard
     depends_on:
       - kamodo-dev
@@ -25,9 +25,14 @@ services:
       context: .
       dockerfile: Dockerfile
     image: ensemblegov-kamodo-dashboard
-    platform: linux/arm64/v8
+    platform: linux/arm64/v8 # aarch64-linux-gnu
     ports:
       - "8060:8060"
     command:
       - python
       - run.py
+    volumes:
+      - type: bind
+        source: ${PWD}
+        target: /kamodo-dashboard
+        

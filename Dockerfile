@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 ensemblegov-kamodo-core:latest
+FROM ensemblegov-kamodo-core:latest
 
 COPY . /kamodo-dashboard
 
