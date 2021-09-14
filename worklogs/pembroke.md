@@ -1,3 +1,6 @@
+
+### 2021-09-13 21:56:00.835284: clock-in
+
 ### 2021-09-13 11:51:42.286791: clock-out
 
 * containerizing dev environment
