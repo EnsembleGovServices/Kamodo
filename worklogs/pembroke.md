@@ -1,3 +1,6 @@
+
+### 2021-09-15 22:54:28.558037: clock-in
+
 ### 2021-09-13 23:07:53.794835: clock-out
 
 * addressed Dhruv question on MATCH keyword
