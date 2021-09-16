@@ -270,7 +270,7 @@ callbacks:
 
   plot_graph:
     output:
-      - id: kamodo-graph
+      - id: {'type': 'kamodo-graph', 'index': MATCH}
         attr: children
     input:
       - id: {'type': 'model-plot-button', 'index': MATCH}
