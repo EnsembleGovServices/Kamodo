@@ -270,8 +270,8 @@ callbacks:
 
   plot_graph:
     output:
-      - id: {'type': 'kamodo-graph', 'index': MATCH}
-        attr: children
+      - id: {'type': 'kamodo-plot', 'index': MATCH}
+        attr: figure
     input:
       - id: {'type': 'model-plot-button', 'index': MATCH}
         attr: n_clicks
@@ -284,6 +284,9 @@ callbacks:
   model_names:
     output:
       - id: selected-models
+        attr: children
+    output:
+      - id: kamodo-graph
         attr: children
     input:
       - id: CTIPe-toggle

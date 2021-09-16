@@ -2,7 +2,7 @@ import dash
 import dash_bootstrap_components as dbc
 import dash_core_components as dcc
 import dash_html_components as html
-from kamodo import KamodoAPI
+from kamodo import KamodoAPI, Kamodo
 from plotly import graph_objs as go
 
 from constants import PYSAT_URL
@@ -282,17 +282,26 @@ def graph_function(input_value, data_value, n1, n2, n3, n4, n5, n6, n7, n8, n9, 
 
 # MODEL NAME LIST START #
 
+import numpy as np
+
+k = Kamodo(
+    f=lambda x=np.linspace(-5, 5, 30): x**2,
+    g=lambda y=np.linspace(-1,1, 30): y**3)
+
 def get_selected_model_names(n_clicks):
     if n_clicks not in [0, None]:
-        k = KamodoAPI(PYSAT_URL)
+        # k = KamodoAPI(PYSAT_URL)
+
         model_list = []
+        graph_list = []
         for index, i in enumerate(k):
             if '(' not in str(i):
+                symbolic_fname = str(k.signatures[str(i)]['symbol'])
                 model_list.append(
                     dbc.ListGroup(
                         [
                             dbc.ListGroupItem(
-                                f"{i}", id={'type': 'model-plot-button', 'index': index//2}, n_clicks=0,
+                                symbolic_fname, id={'type': 'model-plot-button', 'index': index//2}, n_clicks=0,
                                 action=True
                             ),
                             # dbc.ListGroupItem(
@@ -302,7 +311,10 @@ def get_selected_model_names(n_clicks):
                         ]
                     )
                 )
-        return dbc.ListGroup(model_list, className="model-type-list")
+                graph_list.append(
+                    dbc.ListGroupItem(
+                        dcc.Graph(id={'type': 'kamodo-plot', 'index': index//2})))
+        return dbc.ListGroup(model_list, className="model-type-list"), dbc.ListGroup(graph_list)
 
 # MODEL NAME LIST END #
 
@@ -313,12 +325,14 @@ def plot_custom_function(input_value, data_value):
 
 # CUSTOM FUNCTION PLOTTING END #
 
-
+import logging
 
 # TESTING GRAPH FUNCTION START #
 
 def graph_function_testing(n_clicks, id):
-    print("HELLO")
-    print(f"INPUT : {n_clicks} id: {id['index']}")
+    logging.info("HELLO")
+    logging.info(f"INPUT : {n_clicks} id: {id['index']}")
+    fsymbol = list(k.signatures.keys())[id['index']]
+    return k.plot(fsymbol)
 
 # TESTING GRAPH FUNCTION END #
