@@ -1,3 +1,6 @@
+
+### 2021-09-19 15:51:47.598897: clock-in
+
 ### 2021-09-19 14:14:04.376075: clock-out
 
 * dynamic callbacks not working as expected
