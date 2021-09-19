@@ -285,13 +285,19 @@ callbacks:
 
   plot_graph:
     output:
-      - id: {'type': 'kamodo-plot', 'index': MATCH}
+      - id:
+          type: kamodo-plot
+          id: MATCH
         attr: figure
     input:
-      - id: {'type': 'model-plot-button', 'index': MATCH}
+      - id:
+          type: model-plot-button
+          id: MATCH
         attr: n_clicks
     state:
-      - id: {'type': 'model-plot-button', 'index': MATCH}
+      - id:
+          type: model-plot-button
+          id: MATCH
         attr: id
     callback: kamodo_callbacks.graph_function_testing
 

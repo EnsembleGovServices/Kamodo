@@ -309,7 +309,7 @@ def get_selected_model_names(n_clicks):
                     dbc.ListGroupItem(
                         # symbolic_fname,
                         fname,
-                        id={'type': 'model-plot-button', 'index':i},
+                        id={'type': 'model-plot-button', 'id':i},
                         n_clicks=0,
                         action=True
                     ),
@@ -329,8 +329,7 @@ def init_kamodo_graphs(children):
         graph_list.append(
             dbc.ListGroupItem(
                 dcc.Graph(
-                    id={'type': 'kamodo-plot', 'index': index},
-                    # figure=k.plot(fname),
+                    id={'type': 'kamodo-plot', 'id': index},
                     )))
     print('initialized graphs')
     return graph_list
@@ -349,12 +348,12 @@ def plot_custom_function(input_value, data_value):
 # def graph_function_testing(n_clicks, id):
 def graph_function_testing(n_clicks, id):
     print('button clicked {}'.format(n_clicks))
-    if n_clicks is None:
+    if n_clicks in [None, 0]:
         raise PreventUpdate
     print('hello')
     logger.debug("HELLO")
-    logger.debug(f"INPUT : {n_clicks} id: {id['index']}")
-    fsymbol = list(k.signatures.keys())[id['index']]
+    logger.debug(f"INPUT : {n_clicks} id: {id['id']}")
+    fsymbol = list(k.signatures.keys())[id['id']]
     print(fsymbol)
     return k.plot(fsymbol)
 
