@@ -18,7 +18,7 @@ external_scripts:
 
 
 app:
-  jupyter_dash.JupyterDash:
+  dash.Dash:
     external_stylesheets: ${external_stylesheets}
     external_scripts: ${external_scripts}
     title: kamodo-dashboard
@@ -92,11 +92,8 @@ graph:
                 size: md
                 n_clicks: 0
             - html.Div:
-                children:
-                  - dcc.Graph:
-                      id: my-graph-empty
-                id: kamodo-graph
-                className: kamodo-graph
+                id: kamodo-graphs
+
     className: graph-container
 
 custom-function-graph:
@@ -143,7 +140,6 @@ graph-section:
     className: graph-section
     id: graph-section
     width: 6
-
 
 
 model-list:
@@ -268,10 +264,29 @@ callbacks:
 #        attr: n_clicks
 #    callback: kamodo_callbacks.graph_function
 
+
+  model_names:
+    output:
+      - id: selected-models
+        attr: children
+    input:
+      - id: CTIPe-toggle
+        attr: n_clicks
+    callback: kamodo_callbacks.get_selected_model_names
+
+  graph_list:
+    output:
+      - id: kamodo-graphs
+        attr: children
+    input:
+      - id: selected-models
+        attr: children
+    callback: kamodo_callbacks.init_kamodo_graphs
+
   plot_graph:
     output:
       - id: {'type': 'kamodo-plot', 'index': MATCH}
-        attr: figure
+        attr: children
     input:
       - id: {'type': 'model-plot-button', 'index': MATCH}
         attr: n_clicks
@@ -279,20 +294,6 @@ callbacks:
       - id: {'type': 'model-plot-button', 'index': MATCH}
         attr: id
     callback: kamodo_callbacks.graph_function_testing
-
-
-  model_names:
-    output:
-      - id: selected-models
-        attr: children
-    output:
-      - id: kamodo-graph
-        attr: children
-    input:
-      - id: CTIPe-toggle
-        attr: n_clicks
-    callback: kamodo_callbacks.get_selected_model_names
-
 
 #  custom_function:
 #    output:

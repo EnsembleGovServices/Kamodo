@@ -7,6 +7,13 @@ from plotly import graph_objs as go
 
 from constants import PYSAT_URL
 
+import logging
+from dash.exceptions import PreventUpdate
+
+logger = logging.getLogger(__name__)
+
+
+
 # WORKFLOW CARDS START
 workflow_cards = html.Div(
     [
@@ -293,45 +300,55 @@ def get_selected_model_names(n_clicks):
         # k = KamodoAPI(PYSAT_URL)
 
         model_list = []
-        graph_list = []
+
         for index, i in enumerate(k):
             if '(' not in str(i):
                 symbolic_fname = str(k.signatures[str(i)]['symbol'])
+                fname = str(i)
                 model_list.append(
                     dbc.ListGroup(
                         [
                             dbc.ListGroupItem(
-                                symbolic_fname, id={'type': 'model-plot-button', 'index': index//2}, n_clicks=0,
+                                # symbolic_fname,
+                                fname,
+                                id={'type': 'model-type-button', 'index': str(index//2)},
+                                n_clicks=0,
                                 action=True
                             ),
-                            # dbc.ListGroupItem(
-                            #     f"{i}", className=f"model-type-button {i}-plot", id= f'{i}-button', n_clicks=0,
-                            #     action=True
-                            # ),
                         ]
                     )
                 )
-                graph_list.append(
-                    dbc.ListGroupItem(
-                        dcc.Graph(id={'type': 'kamodo-plot', 'index': index//2})))
-        return dbc.ListGroup(model_list, className="model-type-list"), dbc.ListGroup(graph_list)
+
+        return dbc.ListGroup(model_list, className="model-type-list")
+
+def init_kamodo_graphs(children):
+    if children is None:
+        raise PreventUpdate
+    graph_list = []
+    for index, _ in enumerate(children['props']['children']):
+        fname = _['props']['children'][0]['props']['children']
+        graph_list.append(
+            dbc.ListGroupItem(
+                dcc.Graph(
+                    id={'type': 'kamodo-plot', 'index': index//2},
+                    figure=k.plot(fname)),
+                    ))
+    return graph_list
 
 # MODEL NAME LIST END #
 
 # CUSTOM FUNCTION PLOTTING START #
 
 def plot_custom_function(input_value, data_value):
-    print(f" INPUT: {input_value} DATA: {data_value}")
+    return f" INPUT: {input_value} DATA: {data_value}"
 
 # CUSTOM FUNCTION PLOTTING END #
-
-import logging
 
 # TESTING GRAPH FUNCTION START #
 
 def graph_function_testing(n_clicks, id):
-    logging.info("HELLO")
-    logging.info(f"INPUT : {n_clicks} id: {id['index']}")
+    logger.debug("HELLO")
+    logger.debug(f"INPUT : {n_clicks} id: {id['index']}")
     fsymbol = list(k.signatures.keys())[id['index']]
     return k.plot(fsymbol)
 
