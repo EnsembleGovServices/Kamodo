@@ -1,3 +1,5 @@
+### 2021-09-19 13:29:08.353487: clock-out
+
 * got dynamic callback working
 
 ### 2021-09-19 12:09:15.836343: clock-in
