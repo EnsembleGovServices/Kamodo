@@ -286,7 +286,7 @@ callbacks:
   plot_graph:
     output:
       - id: {'type': 'kamodo-plot', 'index': MATCH}
-        attr: children
+        attr: figure
     input:
       - id: {'type': 'model-plot-button', 'index': MATCH}
         attr: n_clicks

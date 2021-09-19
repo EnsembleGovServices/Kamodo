@@ -300,24 +300,21 @@ def get_selected_model_names(n_clicks):
         # k = KamodoAPI(PYSAT_URL)
 
         model_list = []
-
-        for index, i in enumerate(k):
-            if '(' not in str(i):
-                symbolic_fname = str(k.signatures[str(i)]['symbol'])
-                fname = str(i)
+        i = 0 # only increment when there's a symbol without parenthesis
+        for index in k:
+            if '(' not in str(index):
+                symbolic_fname = str(k.signatures[str(index)]['symbol'])
+                fname = str(index)
                 model_list.append(
-                    dbc.ListGroup(
-                        [
-                            dbc.ListGroupItem(
-                                # symbolic_fname,
-                                fname,
-                                id={'type': 'model-type-button', 'index': str(index//2)},
-                                n_clicks=0,
-                                action=True
-                            ),
-                        ]
-                    )
+                    dbc.ListGroupItem(
+                        # symbolic_fname,
+                        fname,
+                        id={'type': 'model-plot-button', 'index':i},
+                        n_clicks=0,
+                        action=True
+                    ),
                 )
+                i += 1
 
         return dbc.ListGroup(model_list, className="model-type-list")
 
@@ -325,14 +322,17 @@ def init_kamodo_graphs(children):
     if children is None:
         raise PreventUpdate
     graph_list = []
+    print(children)
     for index, _ in enumerate(children['props']['children']):
-        fname = _['props']['children'][0]['props']['children']
+        fname = _['props']['children']
+        print(index, fname)
         graph_list.append(
             dbc.ListGroupItem(
                 dcc.Graph(
-                    id={'type': 'kamodo-plot', 'index': index//2},
-                    figure=k.plot(fname)),
-                    ))
+                    id={'type': 'kamodo-plot', 'index': index},
+                    # figure=k.plot(fname),
+                    )))
+    print('initialized graphs')
     return graph_list
 
 # MODEL NAME LIST END #
@@ -346,10 +346,16 @@ def plot_custom_function(input_value, data_value):
 
 # TESTING GRAPH FUNCTION START #
 
+# def graph_function_testing(n_clicks, id):
 def graph_function_testing(n_clicks, id):
+    print('button clicked {}'.format(n_clicks))
+    if n_clicks is None:
+        raise PreventUpdate
+    print('hello')
     logger.debug("HELLO")
     logger.debug(f"INPUT : {n_clicks} id: {id['index']}")
     fsymbol = list(k.signatures.keys())[id['index']]
+    print(fsymbol)
     return k.plot(fsymbol)
 
 # TESTING GRAPH FUNCTION END #
