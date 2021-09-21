@@ -245,12 +245,16 @@ a:hover{
 /* GRAPH SECTION STYLE END */
 
 /* GRAPH STYLE START */
+.kamodo-graph-title{
+    margin-top: 2%;
+}
+
 .kamodo-graph{
     padding:5%
 }
 
 .kamodo-graph-custom{
-    padding:5%
+    padding:0
 }
 
 #my-graph-empty{

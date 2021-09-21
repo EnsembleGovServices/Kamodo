@@ -4,14 +4,21 @@ import dash
 import dash_bootstrap_components as dbc
 import dash_core_components as dcc
 import dash_html_components as html
-from kamodo import KamodoAPI
+import numpy as np
+from dash.exceptions import PreventUpdate
+from kamodo import KamodoAPI, Kamodo
+from plotly import graph_objects as go
 
 from constants import PYSAT_URL
 
 from utils.generate_2d_graph import create_2d_graph, update_2d_graph
+from utils.generate_3d_graph import create_3d_graph
+
+import logging
+logger = logging.getLogger(__name__)
 
 # WORKFLOW CARDS START
-from utils.generate_3d_graph import create_3d_graph
+
 
 workflow_cards = html.Div(
     [
@@ -221,92 +228,66 @@ def toggle_model_cards_accordion(n1, n2, n3, is_open1, is_open2, is_open3):
 
 # PLOT DYNAMICALLY START #
 
-def make_graph(button_id):
-    plot_function_name = button_id.split('-')[0]
-    k = KamodoAPI(PYSAT_URL)
-    graph = dcc.Graph(
-        id='my-graph',
-        className= plot_function_name + '-my-graph',
-        figure=k.plot(plot_function_name),
-    )
-    return graph
-
-
-def graph_function(n1, n2, n3, n4, n5, n6, n7, n8, n9, n10, n11, n12, n13, n14, n15, remove):
-    ctx = dash.callback_context
-    new_graph = dcc.Graph(
-        id='my-graph-empty',
-        figure={}
-    )
-    if not ctx.triggered:
-        return new_graph
-    else:
-        button_id = ctx.triggered[0]["prop_id"].split(".")[0]
-        print(f"PLOT GRAPH")
-
-    if button_id == "B_north-button" and n1:
-        return make_graph(button_id)
-    elif button_id == "B_up-button" and n2:
-        return make_graph(button_id)
-    elif button_id == "B_west-button" and n3:
-        return make_graph(button_id)
-    elif button_id == "B_IGRF_north-button" and n4:
-        return make_graph(button_id)
-    elif button_id == "B_IGRF_up-button" and n5:
-        return make_graph(button_id)
-    elif button_id == "B_IGRF_west-button" and n6:
-        return make_graph(button_id)
-    elif button_id == "latitude-button" and n7:
-        return make_graph(button_id)
-    elif button_id == "longitude-button" and n8:
-        return make_graph(button_id)
-    elif button_id == "altitude-button" and n9:
-        return make_graph(button_id)
-    elif button_id == "dB_zon-button" and n10:
-        return make_graph(button_id)
-    elif button_id == "dB_mer-button" and n11:
-        return make_graph(button_id)
-    elif button_id == "bB_par-button" and n12:
-        return make_graph(button_id)
-    elif button_id == "year-button" and n13:
-        return make_graph(button_id)
-    elif button_id == "dayofyear-button" and n14:
-        return make_graph(button_id)
-    elif button_id == "B_flag-button" and n15:
-        return make_graph(button_id)
-    elif button_id == "remove-graph" and remove:
-        print(f"REMOVE GRAPH {n2}")
-        return new_graph
-    else:
-        return new_graph
-
-# PLOT DYNAMICALLY END #
-
-# MODEL NAME LIST START #
+k = KamodoAPI(PYSAT_URL)
+empty_graph = dcc.Graph(
+    id="my-graph-empty"
+)
 
 def get_selected_model_names(n_clicks):
     if n_clicks not in [0, None]:
-        k = KamodoAPI(PYSAT_URL)
         model_list = []
-        for index, i in enumerate(k):
-            if '(' not in str(i):
+        i = 0  # only increment when there's a symbol without parenthesis
+        for index in k:
+            if '(' not in str(index):
+                symbolic_fname = str(k.signatures[str(index)]['symbol'])
+                fname = str(index)
                 model_list.append(
-                    dbc.ListGroup(
-                        [
-                            # dbc.ListGroupItem(
-                            #     f"{i}", id={'type': 'model-plot-button', 'index': index//2}, n_clicks=0,
-                            #     action=True
-                            # ),
-                            dbc.ListGroupItem(
-                                f"{i}", className=f"model-type-button {i}-plot", id= f'{i}-button', n_clicks=0,
-                                action=True
-                            ),
-                        ]
-                    )
+                    dbc.ListGroupItem(
+                        # symbolic_fname,
+                        fname,
+                        id={'type': 'model-plot-button', 'id': i},
+                        n_clicks=0,
+                        action=True
+                    ),
                 )
+                i += 1
+
         return dbc.ListGroup(model_list, className="model-type-list")
 
-# MODEL NAME LIST END #
+
+def init_kamodo_graphs(children):
+    if children is None:
+        raise PreventUpdate
+    graph_list = []
+    for index, _ in enumerate(children['props']['children']):
+        fname = _['props']['children']
+        graph_list.append(
+            dbc.ListGroupItem(
+                html.Div(
+                    id={'type': 'kamodo-plot', 'id': index}
+                ),
+                id={'type': 'kamodo-plot-area', 'id': index}, className='kamodo-plot-area', style={'display': 'none'})
+        )
+    print('initialized graphs')
+    return graph_list
+
+def plot_kamodo_graph(n_clicks, id):
+    print(f'NCLICK VALUE : {n_clicks}, ID: {id}')
+    if n_clicks in [None, 0]:
+        raise PreventUpdate
+
+    if n_clicks % 2 == 0:
+        return  {'display': 'none'}, False
+    else:
+        fsymbol = list(k.signatures.keys())[id['id']]
+        new_graph = dcc.Graph(
+            id = "fsymbol-graph",
+            figure = k.plot(fsymbol)
+        )
+        return {'display': 'block'}, new_graph
+
+# PLOT DYNAMICALLY END
+
 
 # CUSTOM FUNCTION PLOTTING START #
 

@@ -10,6 +10,7 @@ external_stylesheets:
 
 external_scripts:
   - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML
+#  - assets/js/MathJax.js
   - assets/js/dashboard.js
   - https://code.jquery.com/jquery-3.6.0.js
   - https://code.jquery.com/ui/1.12.1/jquery-ui.js
@@ -111,31 +112,26 @@ graph:
       - dbc.Row:
           className: justify-content-center
           children:
-            - dbc.Button:
-                children: PLOT
-                id: plot-graph
-                className: mr-1 plot-graph
-                color: primary
-                size: md
-                n_clicks: 0
-            - dbc.Button:
-                children: REMOVE
-                id: remove-graph
-                className: mr-1 remove-graph
-                color: primary
-                size: md
-                n_clicks: 0
+            - html.H2:
+                children: KAMODO GRAPH
+                className: kamodo-graph-title
       - html.Hr:
       - dbc.Row:
           className: justify-content-center
           children:
-            - html.H1: KAMODO GRAPH
             - html.Div:
                 children:
                   - dcc.Graph:
                       id: my-graph-empty
-                id: kamodo-graph
-                className: kamodo-graph
+                id: kamodo-graphs
+                className: kamodo-graphs
+      - html.Hr:
+      - dbc.Row:
+          className: justify-content-center
+          children:
+            - html.H2:
+                children: CUSTOM GRAPH
+                className: kamodo-graph-title
       - html.Hr:
       - dbc.Row:
           className: justify-content-center
@@ -280,45 +276,6 @@ callbacks:
         attr: is_open
     callback: kamodo_callbacks.toggle_model_cards_accordion
 
-  plot_graph:
-    output:
-      - id: kamodo-graph
-        attr: children
-    input:
-      - id: B_north-button            # FROM THIS ALL PYSAT MODEL NAMES
-        attr: n_clicks
-      - id: B_up-button
-        attr: n_clicks
-      - id: B_west-button
-        attr: n_clicks
-      - id: B_IGRF_north-button
-        attr: n_clicks
-      - id: B_IGRF_up-button
-        attr: n_clicks
-      - id: B_IGRF_west-button
-        attr: n_clicks
-      - id: latitude-button
-        attr: n_clicks
-      - id: longitude-button
-        attr: n_clicks
-      - id: altitude-button
-        attr: n_clicks
-      - id: dB_zon-button
-        attr: n_clicks
-      - id: dB_mer-button
-        attr: n_clicks
-      - id: dB_par-button
-        attr: n_clicks
-      - id: year-button
-        attr: n_clicks
-      - id: dayofyear-button
-        attr: n_clicks
-      - id: B_flag-button
-        attr: n_clicks
-      - id: remove-graph
-        attr: n_clicks
-    callback: kamodo_callbacks.graph_function
-
 
   model_names:
     output:
@@ -328,6 +285,42 @@ callbacks:
       - id: CTIPe-toggle
         attr: n_clicks
     callback: kamodo_callbacks.get_selected_model_names
+
+
+# ASHER's CODE START
+
+  graph_list:
+    output:
+      - id: kamodo-graphs
+        attr: children
+    input:
+      - id: selected-models
+        attr: children
+    callback: kamodo_callbacks.init_kamodo_graphs
+
+  plot_graph:
+    output:
+      - id:
+          type: kamodo-plot-area
+          id: MATCH
+        attr: style
+      - id:
+          type: kamodo-plot
+          id: MATCH
+        attr: children
+    input:
+      - id:
+          type: model-plot-button
+          id: MATCH
+        attr: n_clicks
+    state:
+      - id:
+          type: model-plot-button
+          id: MATCH
+        attr: id
+    callback: kamodo_callbacks.plot_kamodo_graph
+
+# AHSER's CODE END
 
 
   custom_function:
