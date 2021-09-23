@@ -298,11 +298,6 @@ a:hover{
     padding: 5%
 }
 
-.my-range-slider-area{
-    min-height: 50px;
-    background: white
-}
-
 /* MDOEL TYPE LIST STYLE END */
 
 /* CUSTOM FUNCTION STYLE START */
@@ -315,3 +310,24 @@ a:hover{
 }
 
 /* CUSTOM FUNCTION STYLE START */
+
+/* RANGE CSS START */
+
+.my-range-slider-area{
+    min-height: 50px;
+    background: white
+/*    padding: 5% 0 0 0; */
+}
+
+.my-range-slider-2d{
+    padding: 5% 0 0 0;
+}
+
+.range-min-value{
+    padding-left: 5%
+}
+
+.range-max-value{
+    padding-right: 5%
+}
+/* RANGE CSS END */

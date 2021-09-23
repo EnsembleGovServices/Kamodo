@@ -12,9 +12,10 @@ from plotly import graph_objects as go
 from constants import PYSAT_URL
 
 from utils.generate_2d_graph import create_2d_graph, update_2d_graph
-from utils.generate_3d_graph import create_3d_graph
+from utils.generate_3d_graph import create_3d_graph, update_3d_graph
 
 import logging
+
 logger = logging.getLogger(__name__)
 
 # WORKFLOW CARDS START
@@ -233,6 +234,7 @@ empty_graph = dcc.Graph(
     id="my-graph-empty"
 )
 
+
 def get_selected_model_names(n_clicks):
     if n_clicks not in [0, None]:
         model_list = []
@@ -271,28 +273,137 @@ def init_kamodo_graphs(children):
     print('initialized graphs')
     return graph_list
 
+
 def plot_kamodo_graph(n_clicks, id):
     print(f'NCLICK VALUE : {n_clicks}, ID: {id}')
     if n_clicks in [None, 0]:
         raise PreventUpdate
 
     if n_clicks % 2 == 0:
-        return  {'display': 'none'}, False
+        return {'display': 'none'}, False
     else:
         fsymbol = list(k.signatures.keys())[id['id']]
         new_graph = dcc.Graph(
-            id = "fsymbol-graph",
-            figure = k.plot(fsymbol)
+            id="fsymbol-graph",
+            figure=k.plot(fsymbol)
         )
         return {'display': 'block'}, new_graph
+
 
 # PLOT DYNAMICALLY END
 
 
 # CUSTOM FUNCTION PLOTTING START #
 
-def plot_custom_function(function_value, min_value, max_value):
+def range_slider_2d_graph(min_value, max_value):
+    range_slider = dcc.RangeSlider(
+        id='my-range-slider-2d',
+        className='my-range-slider-2d',
+        min=int(min_value),
+        max=int(max_value),
+        step=0.5,
+        value=[-5, 5],
+    )
+    range_slider_area = html.Div([
+        dbc.Row(
+            [
+                dbc.Col([
+                    html.H4(
+                        f'{min_value}'
+                    )
+                ], className='range-min-value', width=1),
+                dbc.Col([
+                    range_slider
+                ], width=10),
+                dbc.Col([
+                    html.H4(
+                        f'{max_value}'
+                    )
+                ], className='range-max-value', width=1),
+            ]
+        ),
+    ], id='my-range-slider-area', className='my-range-slider-area')
 
+    return range_slider_area
+
+
+def range_slider_3d_graph(min_value, max_value):
+    range_slider_x = dcc.RangeSlider(
+        id='my-range-slider-3d-x',
+        className='my-range-slider-3d-x',
+        min=int(min_value),
+        max=int(max_value),
+        step=0.5,
+        value=[-5, 5],
+    )
+
+    range_slider_y = dcc.RangeSlider(
+        id='my-range-slider-3d-y',
+        className='my-range-slider-3d-y',
+        min=int(min_value),
+        max=int(max_value),
+        step=0.5,
+        value=[-5, 5],
+    )
+
+
+    range_slider_area = html.Div([
+        dbc.Row(
+            [
+                dbc.Col([
+                    html.H4(
+                        f'{min_value}'
+                    )
+                ], className='range-min-value', width=1),
+                dbc.Col([
+                    range_slider_x
+                ], width=10),
+                dbc.Col([
+                    html.H4(
+                        f'{max_value}'
+                    )
+                ], className='range-max-value', width=1),
+            ]
+        ),
+        dbc.Row(
+            [
+                dbc.Col([
+                    html.H4(
+                        f'{min_value}'
+                    )
+                ], className='range-min-value', width=1),
+                dbc.Col([
+                    range_slider_y
+                ], width=10),
+                dbc.Col([
+                    html.H4(
+                        f'{max_value}'
+                    )
+                ], className='range-max-value', width=1),
+            ]
+        ),
+    ], id='my-range-slider-area', className='my-range-slider-area')
+
+    return range_slider_area
+
+
+def plot_custom_2d_graph(figure):
+    new_graph = dcc.Graph(
+        id='my-graph-custom-2d',
+        figure=figure,
+    )
+    return new_graph
+
+
+def plot_custom_3d_graph(figure):
+    new_graph = dcc.Graph(
+        id='my-graph-custom-3d',
+        figure=figure,
+    )
+    return new_graph
+
+
+def plot_custom_function(function_value, min_value, max_value):
     if not min_value:
         min_value = -10
     if not max_value:
@@ -300,56 +411,49 @@ def plot_custom_function(function_value, min_value, max_value):
 
     if function_value and min_value and max_value:
         function = function_value.split('=')[1]
-        if (function.__contains__('x') or function.__contains__('X')) and (function.__contains__('y') or function.__contains__('Y')):
+        if (function.__contains__('x') or function.__contains__('X')) and (
+                function.__contains__('y') or function.__contains__('Y')):
             figure = create_3d_graph(function)
+            if figure:
+                new_graph = plot_custom_3d_graph(figure)
+                range_slider_area = range_slider_3d_graph(min_value, max_value)
+                new_graph_area = html.Div([
+                    new_graph,
+                    range_slider_area
+                ], id='my-graph-custom-area', className='my-graph-custom-area')
+                return new_graph_area
+            else:
+                return dbc.Alert("Input valid function only...", color="danger")
         else:
             figure = create_2d_graph(function)
-
-        if figure:
-            new_graph = dcc.Graph(
-                id='my-graph-custom',
-                figure = figure,
-            )
-            range_slider =  dcc.RangeSlider(
-                    id='my-range-slider',
-                    min=int(min_value),
-                    max=int(max_value),
-                    step=0.5,
-                    value=[-5, 5],
-                    # marks={
-                    #     0: int(min_value),
-                    #     100: int(max_value)
-                    # }
-                )
-            new_graph_area = html.Div([
-                new_graph,
-                html.Div([
-                    dbc.Row(
-                        [
-                            # dbc.Col([
-                            #     html.H5('X : ')
-                            # ], width=1),
-                            dbc.Col([
-                                range_slider
-                            ], width=12)
-                        ]
-                    ),
-                ], id='my-range-slider-area', className='my-range-slider-area')
-            ], id='my-graph-custom-area', className='my-graph-custom-area')
-
-            return new_graph_area
-        else:
-            return dbc.Alert("Input valid function only...", color="danger")
+            if figure:
+                new_graph = plot_custom_2d_graph(figure)
+                range_slider_area = range_slider_2d_graph(min_value, max_value)
+                new_graph_area = html.Div([
+                    new_graph,
+                    range_slider_area
+                ], id='my-graph-custom-area', className='my-graph-custom-area')
+                return new_graph_area
+            else:
+                return dbc.Alert("Input valid function only...", color="danger")
     return False
+
 
 # CUSTOM FUNCTION PLOTTING END #
 
 # UPDATE CUSTOM FUNCTION GRAPH START #
 
-def update_custom_function_graph(range_value, function_value):
-    print(f"RANGE : {range_value}")
+def update_custom_function_2d_graph(range_value, function_value):
+    print(f"RANGE 2D : {range_value}")
     function = function_value.split('=')[1]
     new_figure = update_2d_graph(range_value, function)
+    return new_figure
+
+
+def update_custom_function_3d_graph(range_value_x, range_value_y, function_value):
+    print(f"RANGE 3D : X {range_value_x} Y {range_value_y} ")
+    function = function_value.split('=')[1]
+    new_figure = update_3d_graph(range_value_x, range_value_y, function)
     return new_figure
 
 # UPDATE CUSTOM FUNCTION GRAPH END #

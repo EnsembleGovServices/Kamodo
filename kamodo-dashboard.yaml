@@ -9,7 +9,7 @@ external_stylesheets:
   - assets/css/dashboard.css
 
 external_scripts:
-  - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML
+  - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML
 #  - assets/js/MathJax.js
   - assets/js/dashboard.js
   - https://code.jquery.com/jquery-3.6.0.js
@@ -336,25 +336,28 @@ callbacks:
         attr: value
     callback: kamodo_callbacks.plot_custom_function
 
-  custom_graph_update:
+  custom_2d_graph_update:
     output:
-      - id: my-graph-custom
+      - id: my-graph-custom-2d
         attr: figure
     input:
-      - id: my-range-slider
+      - id: my-range-slider-2d
         attr: value
     state:
       - id: custom-function-input
         attr: value
-    callback: kamodo_callbacks.update_custom_function_graph
+    callback: kamodo_callbacks.update_custom_function_2d_graph
 
-#    range_slider_update:
-#      output:
-#        - id: my-range-slider-area
-#          attr: children
-#      input:
-#        - id: function-range-minimun
-#          attr: value
-#        - id: function-range-maximum
-#          attr: value
-#      callback: kamodo_callbacks.update_range_slider
+  custom_3d_graph_update:
+    output:
+      - id: my-graph-custom-3d
+        attr: figure
+    input:
+      - id: my-range-slider-3d-x
+        attr: value
+      - id: my-range-slider-3d-y
+        attr: value
+    state:
+      - id: custom-function-input
+        attr: value
+    callback: kamodo_callbacks.update_custom_function_3d_graph
