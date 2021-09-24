@@ -1,20 +1,26 @@
+import ast
+
 import dash
 import dash_bootstrap_components as dbc
 import dash_core_components as dcc
 import dash_html_components as html
+import numpy as np
+from dash.exceptions import PreventUpdate
 from kamodo import KamodoAPI, Kamodo
-from plotly import graph_objs as go
+from plotly import graph_objects as go
 
 from constants import PYSAT_URL
 
+from utils.generate_2d_graph import create_2d_graph, update_2d_graph
+from utils.generate_3d_graph import create_3d_graph, update_3d_graph
+
 import logging
-from dash.exceptions import PreventUpdate
 
 logger = logging.getLogger(__name__)
 
-
-
 # WORKFLOW CARDS START
+
+
 workflow_cards = html.Div(
     [
         html.Div([
@@ -223,84 +229,16 @@ def toggle_model_cards_accordion(n1, n2, n3, is_open1, is_open2, is_open3):
 
 # PLOT DYNAMICALLY START #
 
-def make_graph(button_id):
-    plot_function_name = button_id.split('-')[0]
-    k = KamodoAPI(PYSAT_URL)
-    graph = dcc.Graph(
-        id='my-graph',
-        className= plot_function_name + '-my-graph',
-        figure=k.plot(plot_function_name),
-    )
-    return graph
+k = KamodoAPI(PYSAT_URL)
+empty_graph = dcc.Graph(
+    id="my-graph-empty"
+)
 
-
-def graph_function(input_value, data_value, n1, n2, n3, n4, n5, n6, n7, n8, n9, n10, n11, n12, n13, n14, n15, remove):
-    ctx = dash.callback_context
-    new_graph = dcc.Graph(
-        id='my-graph-empty',
-        figure={}
-    )
-    if not ctx.triggered:
-        return new_graph
-    else:
-        button_id = ctx.triggered[0]["prop_id"].split(".")[0]
-        print(f"PLOT GRAPH")
-
-    if input_value:
-        plot_custom_function(input_value, data_value)
-
-    if button_id == "B_north-button" and n1:
-        return make_graph(button_id)
-    elif button_id == "B_up-button" and n2:
-        return make_graph(button_id)
-    elif button_id == "B_west-button" and n3:
-        return make_graph(button_id)
-    elif button_id == "B_IGRF_north-button" and n4:
-        return make_graph(button_id)
-    elif button_id == "B_IGRF_up-button" and n5:
-        return make_graph(button_id)
-    elif button_id == "B_IGRF_west-button" and n6:
-        return make_graph(button_id)
-    elif button_id == "latitude-button" and n7:
-        return make_graph(button_id)
-    elif button_id == "longitude-button" and n8:
-        return make_graph(button_id)
-    elif button_id == "altitude-button" and n9:
-        return make_graph(button_id)
-    elif button_id == "dB_zon-button" and n10:
-        return make_graph(button_id)
-    elif button_id == "dB_mer-button" and n11:
-        return make_graph(button_id)
-    elif button_id == "bB_par-button" and n12:
-        return make_graph(button_id)
-    elif button_id == "year-button" and n13:
-        return make_graph(button_id)
-    elif button_id == "dayofyear-button" and n14:
-        return make_graph(button_id)
-    elif button_id == "B_flag-button" and n15:
-        return make_graph(button_id)
-    elif button_id == "remove-graph" and remove:
-        print(f"REMOVE GRAPH {n2}")
-        return new_graph
-    else:
-        return new_graph
-
-# PLOT DYNAMICALLY END #
-
-# MODEL NAME LIST START #
-
-import numpy as np
-
-k = Kamodo(
-    f=lambda x=np.linspace(-5, 5, 30): x**2,
-    g=lambda y=np.linspace(-1,1, 30): y**3)
 
 def get_selected_model_names(n_clicks):
     if n_clicks not in [0, None]:
-        # k = KamodoAPI(PYSAT_URL)
-
         model_list = []
-        i = 0 # only increment when there's a symbol without parenthesis
+        i = 0  # only increment when there's a symbol without parenthesis
         for index in k:
             if '(' not in str(index):
                 symbolic_fname = str(k.signatures[str(index)]['symbol'])
@@ -309,7 +247,7 @@ def get_selected_model_names(n_clicks):
                     dbc.ListGroupItem(
                         # symbolic_fname,
                         fname,
-                        id={'type': 'model-plot-button', 'id':i},
+                        id={'type': 'model-plot-button', 'id': i},
                         n_clicks=0,
                         action=True
                     ),
@@ -318,43 +256,204 @@ def get_selected_model_names(n_clicks):
 
         return dbc.ListGroup(model_list, className="model-type-list")
 
+
 def init_kamodo_graphs(children):
     if children is None:
         raise PreventUpdate
     graph_list = []
-    print(children)
     for index, _ in enumerate(children['props']['children']):
         fname = _['props']['children']
-        print(index, fname)
         graph_list.append(
             dbc.ListGroupItem(
-                dcc.Graph(
-                    id={'type': 'kamodo-plot', 'id': index},
-                    )))
+                html.Div(
+                    id={'type': 'kamodo-plot', 'id': index}
+                ),
+                id={'type': 'kamodo-plot-area', 'id': index}, className='kamodo-plot-area', style={'display': 'none'})
+        )
     print('initialized graphs')
     return graph_list
 
-# MODEL NAME LIST END #
+
+def plot_kamodo_graph(n_clicks, id):
+    print(f'NCLICK VALUE : {n_clicks}, ID: {id}')
+    if n_clicks in [None, 0]:
+        raise PreventUpdate
+
+    if n_clicks % 2 == 0:
+        return {'display': 'none'}, False
+    else:
+        fsymbol = list(k.signatures.keys())[id['id']]
+        new_graph = dcc.Graph(
+            id="fsymbol-graph",
+            figure=k.plot(fsymbol)
+        )
+        return {'display': 'block'}, new_graph
+
+
+# PLOT DYNAMICALLY END
+
 
 # CUSTOM FUNCTION PLOTTING START #
 
-def plot_custom_function(input_value, data_value):
-    return f" INPUT: {input_value} DATA: {data_value}"
+def range_slider_2d_graph(min_value, max_value):
+    range_slider = dcc.RangeSlider(
+        id='my-range-slider-2d',
+        className='my-range-slider-2d',
+        min=int(min_value),
+        max=int(max_value),
+        step=0.5,
+        value=[-5, 5],
+    )
+    range_slider_area = html.Div([
+        dbc.Row(
+            [
+                dbc.Col([
+                    html.H4(
+                        f'{min_value}'
+                    )
+                ], className='range-min-value', width=1),
+                dbc.Col([
+                    range_slider
+                ], width=10),
+                dbc.Col([
+                    html.H4(
+                        f'{max_value}'
+                    )
+                ], className='range-max-value', width=1),
+            ]
+        ),
+    ], id='my-range-slider-area', className='my-range-slider-area')
+
+    return range_slider_area
+
+
+def range_slider_3d_graph(min_value, max_value):
+    range_slider_x = dcc.RangeSlider(
+        id='my-range-slider-3d-x',
+        className='my-range-slider-3d-x',
+        min=int(min_value),
+        max=int(max_value),
+        step=0.5,
+        value=[-5, 5],
+    )
+
+    range_slider_y = dcc.RangeSlider(
+        id='my-range-slider-3d-y',
+        className='my-range-slider-3d-y',
+        min=int(min_value),
+        max=int(max_value),
+        step=0.5,
+        value=[-5, 5],
+    )
+
+
+    range_slider_area = html.Div([
+        dbc.Row(
+            [
+                dbc.Col([
+                    html.H4(
+                        f'{min_value}'
+                    )
+                ], className='range-min-value', width=1),
+                dbc.Col([
+                    range_slider_x
+                ], width=10),
+                dbc.Col([
+                    html.H4(
+                        f'{max_value}'
+                    )
+                ], className='range-max-value', width=1),
+            ]
+        ),
+        dbc.Row(
+            [
+                dbc.Col([
+                    html.H4(
+                        f'{min_value}'
+                    )
+                ], className='range-min-value', width=1),
+                dbc.Col([
+                    range_slider_y
+                ], width=10),
+                dbc.Col([
+                    html.H4(
+                        f'{max_value}'
+                    )
+                ], className='range-max-value', width=1),
+            ]
+        ),
+    ], id='my-range-slider-area', className='my-range-slider-area')
+
+    return range_slider_area
+
+
+def plot_custom_2d_graph(figure):
+    new_graph = dcc.Graph(
+        id='my-graph-custom-2d',
+        figure=figure,
+    )
+    return new_graph
+
+
+def plot_custom_3d_graph(figure):
+    new_graph = dcc.Graph(
+        id='my-graph-custom-3d',
+        figure=figure,
+    )
+    return new_graph
+
+
+def plot_custom_function(function_value, min_value, max_value):
+    if not min_value:
+        min_value = -10
+    if not max_value:
+        max_value = 10
+
+    if function_value and min_value and max_value:
+        function = function_value.split('=')[1]
+        if (function.__contains__('x') or function.__contains__('X')) and (
+                function.__contains__('y') or function.__contains__('Y')):
+            figure = create_3d_graph(function)
+            if figure:
+                new_graph = plot_custom_3d_graph(figure)
+                range_slider_area = range_slider_3d_graph(min_value, max_value)
+                new_graph_area = html.Div([
+                    new_graph,
+                    range_slider_area
+                ], id='my-graph-custom-area', className='my-graph-custom-area')
+                return new_graph_area
+            else:
+                return dbc.Alert("Input valid function only...", color="danger")
+        else:
+            figure = create_2d_graph(function)
+            if figure:
+                new_graph = plot_custom_2d_graph(figure)
+                range_slider_area = range_slider_2d_graph(min_value, max_value)
+                new_graph_area = html.Div([
+                    new_graph,
+                    range_slider_area
+                ], id='my-graph-custom-area', className='my-graph-custom-area')
+                return new_graph_area
+            else:
+                return dbc.Alert("Input valid function only...", color="danger")
+    return False
+
 
 # CUSTOM FUNCTION PLOTTING END #
 
-# TESTING GRAPH FUNCTION START #
+# UPDATE CUSTOM FUNCTION GRAPH START #
 
-# def graph_function_testing(n_clicks, id):
-def graph_function_testing(n_clicks, id):
-    print('button clicked {}'.format(n_clicks))
-    if n_clicks in [None, 0]:
-        raise PreventUpdate
-    print('hello')
-    logger.debug("HELLO")
-    logger.debug(f"INPUT : {n_clicks} id: {id['id']}")
-    fsymbol = list(k.signatures.keys())[id['id']]
-    print(fsymbol)
-    return k.plot(fsymbol)
+def update_custom_function_2d_graph(range_value, function_value):
+    print(f"RANGE 2D : {range_value}")
+    function = function_value.split('=')[1]
+    new_figure = update_2d_graph(range_value, function)
+    return new_figure
 
-# TESTING GRAPH FUNCTION END #
+
+def update_custom_function_3d_graph(range_value_x, range_value_y, function_value):
+    print(f"RANGE 3D : X {range_value_x} Y {range_value_y} ")
+    function = function_value.split('=')[1]
+    new_figure = update_3d_graph(range_value_x, range_value_y, function)
+    return new_figure
+
+# UPDATE CUSTOM FUNCTION GRAPH END #

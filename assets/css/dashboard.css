@@ -2,6 +2,7 @@
 body{
     height: 100vw;
     padding: 0;
+    overflow-y: hidden
 }
 
 /* BODY STYLE END */
@@ -238,13 +239,22 @@ a:hover{
 /* GRAPH SECTION STYLE START */
 .graph-container{
     background-color: #CAC9C9;
-    min-height: 600px;
+    height: 600px;
+    overflow-y: scroll
 }
 /* GRAPH SECTION STYLE END */
 
 /* GRAPH STYLE START */
+.kamodo-graph-title{
+    margin-top: 2%;
+}
+
 .kamodo-graph{
     padding:5%
+}
+
+.kamodo-graph-custom{
+    padding:0
 }
 
 #my-graph-empty{
@@ -259,6 +269,12 @@ a:hover{
 .main-svg{
     width: 100%
 }
+
+/*#scene{
+    top: 50px,
+    width: 500px ! important,
+    height: 300px ! important
+}*/
 /* GRAPH STYLE END */
 
 /* MODEL TYPE LIST STYLE START */
@@ -281,6 +297,7 @@ a:hover{
 .model-type-button{
     padding: 5%
 }
+
 /* MDOEL TYPE LIST STYLE END */
 
 /* CUSTOM FUNCTION STYLE START */
@@ -291,4 +308,26 @@ a:hover{
 .function-header-area{
     margin: 2% 0;
 }
+
 /* CUSTOM FUNCTION STYLE START */
+
+/* RANGE CSS START */
+
+.my-range-slider-area{
+    min-height: 50px;
+    background: white
+/*    padding: 5% 0 0 0; */
+}
+
+.my-range-slider-2d{
+    padding: 5% 0 0 0;
+}
+
+.range-min-value{
+    padding-left: 5%
+}
+
+.range-max-value{
+    padding-right: 5%
+}
+/* RANGE CSS END */
