@@ -99,10 +99,10 @@ workflow_cards = html.Div(
 # MODEL CARDS START
 
 
-ctipe_details = html.Div([
+PySat_details = html.Div([
     dbc.Row([
         html.P(
-            'The Coupled Thermosphere Ionosphere Plasmasphere Electrodynamics Model (CTIPe) model consists of four distinct components:'),
+            'The Coupled Thermosphere Ionosphere Plasmasphere Electrodynamics Model (PySat) model consists of four distinct components:'),
         html.P(
             'A high-latitude ionosphere model; A mid and low-latitude ionosphere/plasmasphere model; An electrodynamical calculation of the global dynamo electric field.')
     ], className="justify-content-center"),
@@ -110,16 +110,16 @@ ctipe_details = html.Div([
         html.P('Model Developer(s) Timothy Fuller-Rowell, Mihail Codrescu, et al. NOAA Space Weather Prediction Center')
     ], className="justify-content-center"),
     dbc.Row([
-        dbc.Input(id="ctipe-input-one", placeholder="Type something...", type="text", style={'margin': '3% 0'}),
+        dbc.Input(id="PySat-input-one", placeholder="Type something...", type="text", style={'margin': '3% 0'}),
     ], className="justify-content-center"),
     dbc.Row([
-        dbc.Input(id="ctipe-input-two", placeholder="Type something...", type="text", style={'margin': '3% 0'}),
+        dbc.Input(id="PySat-input-two", placeholder="Type something...", type="text", style={'margin': '3% 0'}),
     ], className="justify-content-center")
-], className="ctipe-details")
+], className="PySat-details")
 
 
 def get_model_types(model_name):
-    if model_name == "CTIPe":
+    if model_name == "PySat":
         return dbc.ListGroup(
             [
                 dbc.ListGroupItem("Couple", className="model-type-name"),
@@ -169,13 +169,13 @@ def make_model_card(model_name):
         n_clicks=0,
     ),
         dbc.Collapse([
-            ctipe_details
+            PySat_details
         ], id=f"collapse-{model_name}", className='container', is_open=False)
     ], className='model-accordion-card')
 
 
 accordion = html.Div(
-    [make_model_card('CTIPe'), make_model_card('GITM'), make_model_card('IRI')], className="accordion", id="accordion"
+    [make_model_card('PySat'), make_model_card('GITM'), make_model_card('IRI')], className="accordion", id="accordion"
 )
 
 model_cards = html.Div(
@@ -218,7 +218,7 @@ def toggle_model_cards_accordion(n1, n2, n3, is_open1, is_open2, is_open3):
     else:
         button_id = ctx.triggered[0]["prop_id"].split(".")[0]
 
-    if button_id == "CTIPe-toggle" and n1:
+    if button_id == "PySat-toggle" and n1:
         return not is_open1, False, False
     elif button_id == "GITM-toggle" and n2:
         return False, not is_open2, False
@@ -308,20 +308,25 @@ def range_slider_2d_graph(min_value, max_value):
         dbc.Row(
             [
                 dbc.Col([
-                    html.H4(
-                        f'{min_value}'
-                    )
-                ], className='range-min-value', width=1),
-                dbc.Col([
                     range_slider
-                ], width=10),
-                dbc.Col([
-                    html.H4(
-                        f'{max_value}'
-                    )
-                ], className='range-max-value', width=1),
+                ], width=12),
+
             ]
         ),
+        dbc.Row([
+            dbc.Col([
+                html.Div(
+                    html.H4(
+                        f'{min_value}'
+                    ), className='range-min-value')
+            ], width=6),
+            dbc.Col([
+                html.Div(
+                    html.H4(
+                        f'{max_value}'
+                    ), className='range-max-value')
+            ], width=6)
+        ])
     ], id='my-range-slider-area', className='my-range-slider-area')
 
     return range_slider_area
@@ -346,42 +351,49 @@ def range_slider_3d_graph(min_value, max_value):
         value=[-5, 5],
     )
 
-
     range_slider_area = html.Div([
         dbc.Row(
             [
                 dbc.Col([
-                    html.H4(
-                        f'{min_value}'
-                    )
-                ], className='range-min-value', width=1),
-                dbc.Col([
                     range_slider_x
-                ], width=10),
-                dbc.Col([
-                    html.H4(
-                        f'{max_value}'
-                    )
-                ], className='range-max-value', width=1),
+                ], width=12),
             ]
         ),
+        dbc.Row([
+            dbc.Col([
+                html.Div(
+                    html.H4(
+                        f'{min_value}'
+                    ), className='range-min-value')
+            ], width=6),
+            dbc.Col([
+                html.Div(
+                    html.H4(
+                        f'{max_value}'
+                    ), className='range-max-value')
+            ], width=6),
+        ]),
         dbc.Row(
             [
                 dbc.Col([
-                    html.H4(
-                        f'{min_value}'
-                    )
-                ], className='range-min-value', width=1),
-                dbc.Col([
                     range_slider_y
-                ], width=10),
-                dbc.Col([
-                    html.H4(
-                        f'{max_value}'
-                    )
-                ], className='range-max-value', width=1),
+                ], width=12),
             ]
         ),
+        dbc.Row([
+            dbc.Col([
+                html.Div(
+                    html.H4(
+                        f'{min_value}'
+                    ), className='range-min-value')
+            ], width=6),
+            dbc.Col([
+                html.Div(
+                    html.H4(
+                        f'{max_value}'
+                    ), className='range-max-value')
+            ], width=6),
+        ]),
     ], id='my-range-slider-area', className='my-range-slider-area')
 
     return range_slider_area

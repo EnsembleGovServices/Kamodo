@@ -209,17 +209,17 @@ a:hover{
     width: 100%
 }
 
-#collapse-CTIPe, #collapse-GITM, #collapse-IRI{
+#collapse-PySat, #collapse-GITM, #collapse-IRI{
     background: #C4C4C4;
     margin-bottom: 5%
 }
 /* ACCORDION STYLE END */
 
-/* CTIPe MODEL STYLE START*/
-.ctipe-details{
+/* PySat MODEL STYLE START*/
+.PySat-details{
     padding: 5% 7%;
 }
-/* CTIPe MODEL STYLE START*/
+/* PySat MODEL STYLE START*/
 
 /* MENU BAR DETAILS SLIDER STYLE START  */
 
@@ -316,18 +316,21 @@ a:hover{
 .my-range-slider-area{
     min-height: 50px;
     background: white
-/*    padding: 5% 0 0 0; */
 }
 
 .my-range-slider-2d{
-    padding: 5% 0 0 0;
+    padding-top: 5%;
+
 }
 
 .range-min-value{
-    padding-left: 5%
+    margin-top: -8%;
+    margin-left: 5%
 }
 
 .range-max-value{
-    padding-right: 5%
+    margin-top: -8%;
+    margin-right: 5%;
+    float: right
 }
 /* RANGE CSS END */
