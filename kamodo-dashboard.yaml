@@ -49,11 +49,11 @@ side-menubar:
       - dbc.Tabs:
           children:
             - dbc.Tab:
-                label: Workflow
-                tab_id: workflow_tab
-            - dbc.Tab:
                 label: Models
                 tab_id: models_tab
+            - dbc.Tab:
+                label: Workflow
+                tab_id: workflow_tab
             - dbc.Tab:
                 label: Datasets
                 tab_id: datasets_tab
@@ -61,7 +61,7 @@ side-menubar:
                 label: Editor
                 tab_id: editor_tab
           id: SideMenuBarTabs
-          active_tab: workflow_tab
+          active_tab: models_tab
     className: justify-content-center side-menubar
 
 menubar-details:
