@@ -56,7 +56,6 @@ psidash @ git+https://github.com/predsci/psidash.git@b61d3684530bcd1f1489b22d6c4
 ptyprocess==0.7.0
 py==1.10.0
 Pygments==2.10.0
-pylatexenc==2.10
 pyparsing==2.4.7
 pytest==6.2.5
 python-dateutil==2.8.2
