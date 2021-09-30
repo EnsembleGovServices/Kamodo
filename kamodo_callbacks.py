@@ -1,13 +1,10 @@
-import ast
-
 import dash
 import dash_bootstrap_components as dbc
 import dash_core_components as dcc
 import dash_html_components as html
-import numpy as np
+
 from dash.exceptions import PreventUpdate
-from kamodo import KamodoAPI, Kamodo
-from plotly import graph_objects as go
+from kamodo import KamodoAPI
 
 from constants import PYSAT_URL
 

@@ -1,4 +1,3 @@
-from sympy import latex
-
-def unicode_to_latex_convertor(raw_function_string):
-    return latex(raw_function_string)
+def unicode_to_latex_convertor(func):
+    latex_func = "$f(x) = " + func._repr_latex_()[1:]
+    return latex_func

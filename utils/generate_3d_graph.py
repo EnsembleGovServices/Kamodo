@@ -24,8 +24,9 @@ def get_data(data):
 
 
 def get_layout(figure, raw_function_string):
+    func = get_function(raw_function_string)
     figure.update_layout(
-        title='$' + unicode_to_latex_convertor(raw_function_string) + '$',
+        title=unicode_to_latex_convertor(func),
         width=700,
         height=500,
     )
