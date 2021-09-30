@@ -23,6 +23,7 @@ Flask-Compress==1.10.1
 Flask-Cors==3.0.10
 Flask-RESTful==0.3.8
 future==0.18.2
+gunicorn==20.1.0
 hydra-core==0.11.3
 idna==3.2
 iniconfig==1.1.1
@@ -55,6 +56,7 @@ psidash @ git+https://github.com/predsci/psidash.git@b61d3684530bcd1f1489b22d6c4
 ptyprocess==0.7.0
 py==1.10.0
 Pygments==2.10.0
+pylatexenc==2.10
 pyparsing==2.4.7
 pytest==6.2.5
 python-dateutil==2.8.2

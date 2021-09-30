@@ -49,11 +49,11 @@ side-menubar:
       - dbc.Tabs:
           children:
             - dbc.Tab:
-                label: Workflow
-                tab_id: workflow_tab
-            - dbc.Tab:
                 label: Models
                 tab_id: models_tab
+            - dbc.Tab:
+                label: Workflow
+                tab_id: workflow_tab
             - dbc.Tab:
                 label: Datasets
                 tab_id: datasets_tab
@@ -61,7 +61,7 @@ side-menubar:
                 label: Editor
                 tab_id: editor_tab
           id: SideMenuBarTabs
-          active_tab: workflow_tab
+          active_tab: models_tab
     className: justify-content-center side-menubar
 
 menubar-details:
@@ -71,40 +71,6 @@ menubar-details:
       - html.Div:
           id: content
     className: justify-content-center menubar-details
-
-
-#graph:
-#  dbc.Row:
-#    children:
-#      - dbc.Col:
-#          children:
-#            - dbc.Button:
-#                children: PLOT
-#                id: plot-graph
-#                className: mr-1 plot-graph
-#                color: primary
-#                size: md
-#                n_clicks: 0
-#            - dbc.Button:
-#                children: REMOVE
-#                id: remove-graph
-#                className: mr-1 remove-graph
-#                color: primary
-#                size: md
-#                n_clicks: 0
-#            - html.Div:
-#                children:
-#                  - dcc.Graph:
-#                      id: my-graph-empty
-#                id: kamodo-graph
-#                className: kamodo-graph
-#            - html.Div:
-#                children:
-#                id: kamodo-graph-custom
-#                className: kamodo-graph-custom
-#
-#    className: graph-container
-
 
 graph:
   html.Div:
@@ -254,21 +220,21 @@ callbacks:
 
   model_callback:
     output:
-      - id: collapse-CTIPe
+      - id: collapse-PySat
         attr: is_open
       - id: collapse-GITM
         attr: is_open
       - id: collapse-IRI
         attr: is_open
     input:
-      - id: CTIPe-toggle
+      - id: PySat-toggle
         attr: n_clicks
       - id: GITM-toggle
         attr: n_clicks
       - id: IRI-toggle
         attr: n_clicks
     state:
-      - id: collapse-CTIPe
+      - id: collapse-PySat
         attr: is_open
       - id: collapse-GITM
         attr: is_open
@@ -282,7 +248,7 @@ callbacks:
       - id: selected-models
         attr: children
     input:
-      - id: CTIPe-toggle
+      - id: PySat-toggle
         attr: n_clicks
     callback: kamodo_callbacks.get_selected_model_names
 
