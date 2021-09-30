@@ -1,3 +1,10 @@
+### 2021-09-30 01:22:42.397749: clock-out
+
+* answering Dhruv on dash-katex
+
+usage.py is broken in their repo due to a change in dash syntax.  my version fixed it https://github.com/asher-pembroke/dash-katex
+
+I have a pull request here https://github.com/xhlulu/dash-katex/pull/3
 
 ### 2021-09-30 01:08:20.085593: clock-in
 
