@@ -1,3 +1,6 @@
+
+### 2021-10-04 10:04:49.556811: clock-in
+
 ### 2021-09-30 01:22:42.397749: clock-out
 
 * answering Dhruv on dash-katex
