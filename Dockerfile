@@ -1,4 +1,4 @@
-FROM ensemblegov-kamodo-core:latest
+FROM ensemble/kamodo:latest
 
 COPY . /kamodo-dashboard
 

@@ -1,0 +1,90 @@
+import:
+  dcc: dash_core_components
+  html: dash_html_components
+  dbc: dash_bootstrap_components
+
+external_stylesheets:
+  #  - https://codepen.io/chriddyp/pen/bWLwgP.css
+  - https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css
+  - assets/css/dashboard.css
+
+external_scripts:
+  - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML
+  - assets/js/dashboard.js
+  - https://code.jquery.com/jquery-3.6.0.js
+  - https://code.jquery.com/ui/1.12.1/jquery-ui.js
+  - https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js
+  - https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js
+
+
+app:
+  dash.Dash:
+    external_stylesheets: ${external_stylesheets}
+    external_scripts: ${external_scripts}
+    title: kamodo-dashboard
+    suppress_callback_exceptions: True
+
+run_server:
+  host: '0.0.0.0'
+  port: 8060
+  extra_files:
+    - dynamic_callbacks.yaml
+  debug: True
+  dev_tools_hot_reload: False
+
+header:
+  html.H5: 'hello world'
+
+click_me:
+  - html.Button:
+      id: click-me
+      children: click me
+      n_clicks: 0
+  - html.Div:
+      id: click-content
+      children:
+
+another_button:
+  html.Button: 'another button'
+
+layout:
+  html.Div:
+    id: layout
+    children:
+      - dcc.Dropdown:
+          id: dropdown
+      - dcc.Location:
+          id: url
+      - html.Div:
+          id: content
+    className: kamodo-dashboard
+
+callbacks:
+  update_dropdown:
+    input:
+      - id: url
+        attr: pathname
+    output:
+      - id: dropdown
+        attr: options
+      - id: dropdown
+        attr: value
+  update_content:
+    input:
+      - id: dropdown
+        attr: value
+    output:
+      - id: content
+        attr: children
+  click_me:
+    input:
+      - id: click-me
+        attr: n_clicks
+    output:
+      - id: click-content
+        attr: children
+    callback: dynamic_data_callbacks.pass_through
+
+    # callback: kamodo_callbacks.get_selected_model_names
+
+
