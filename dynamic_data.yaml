@@ -4,9 +4,9 @@ import:
   dbc: dash_bootstrap_components
 
 external_stylesheets:
-  #  - https://codepen.io/chriddyp/pen/bWLwgP.css
   - https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css
   - assets/css/dashboard.css
+
 
 external_scripts:
   - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML
@@ -32,32 +32,76 @@ run_server:
   debug: True
   dev_tools_hot_reload: False
 
+# define custom variables to be referenced in app
+workflows:
+  - header
+  - click_me
+  - another_button
+
+# For example variabled will be ignored by psidash
 header:
   html.H5: 'hello world'
 
+# Another variable we'll use to populate dropdown options
 click_me:
-  - html.Button:
-      id: click-me
-      children: click me
-      n_clicks: 0
-  - html.Div:
-      id: click-content
-      children:
+  html.Div:
+    children:
+      - dbc.Button:
+          id: click-me
+          children: click me
+          color: primary
+          n_clicks: 0
+          # className:
+      - html.Div:
+          id: click-content
 
+# Another example variable
 another_button:
-  html.Button: 'another button'
+  html.Div:
+    children:
+      - dbc.Button:
+          id: another-button
+          children: another click
+          color: primary
+      - html.Div:
+          id: another-content
 
+my_item:
+  dbc.ListGroupItem:
+    children: 'Item {i}'
+    id: my-item-{i}
+
+# keep the initial layout minimal
+# we will dynamically update the layout based on user interaction
 layout:
   html.Div:
     id: layout
     children:
-      - dcc.Dropdown:
-          id: dropdown
       - dcc.Location:
           id: url
-      - html.Div:
-          id: content
-    className: kamodo-dashboard
+      - dcc.Store: # highest level storage
+          id: workflow-store
+      - dcc.Store: # workflow-dependent storage
+          id: save-state
+      - dbc.Row:
+          children:
+          - dbc.Col:
+              children:
+                html.H3: Select Workflow
+              width:
+                size: 3
+                # offset: 3
+          - dbc.Col:
+              width:
+                size: 3
+              children:
+              - dcc.Dropdown:
+                  id: dropdown
+          - dbc.Col:
+              width:
+                size: 3
+              id: content
+
 
 callbacks:
   update_dropdown:
@@ -69,22 +113,40 @@ callbacks:
         attr: options
       - id: dropdown
         attr: value
+
   update_content:
     input:
       - id: dropdown
         attr: value
+    state:
+      - id: workflow-store
+        attr: data
     output:
       - id: content
         attr: children
-  click_me:
+      - id: workflow-store
+        attr: data
+
+  update_save_state:
     input:
       - id: click-me
         attr: n_clicks
+    state:
+      - id: save-state
+        attr: data
+    output:
+      - id: save-state
+        attr: data
+
+
+  render_click_content:
+    input:
+      - id: save-state
+        attr: modified_timestamp
+    state:
+      - id: save-state
+        attr: data
     output:
       - id: click-content
         attr: children
-    callback: dynamic_data_callbacks.pass_through
-
-    # callback: kamodo_callbacks.get_selected_model_names
-
 
