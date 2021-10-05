@@ -1,3 +1,4 @@
+* adding switches
 
 ### 2021-10-05 15:26:49.076837: clock-in
 

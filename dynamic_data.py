@@ -8,6 +8,7 @@ from dash.exceptions import PreventUpdate
 import hydra
 import dash_html_components as html
 from dash_katex import DashKatex
+import dash
 
 import re
 
@@ -16,7 +17,7 @@ conf = load_conf('dynamic_data.yaml')
 
 # app = dash.Dash(__name__, server=server) # call flask server
 
-import dash
+
 
 server = flask.Flask(__name__) # define flask app.server
 
