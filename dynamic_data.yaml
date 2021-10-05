@@ -34,13 +34,22 @@ run_server:
 
 # define custom variables to be referenced in app
 workflows:
-  - header
-  - click_me
-  - another_button
+  flythrough:
+    models:
+      - models_flythrough.yaml
+  click_me:
+    models:
+      - modelsB.yaml
+  another_button:
 
-# For example variabled will be ignored by psidash
-header:
-  html.H5: 'hello world'
+
+flythrough:
+  html.Div:
+    children:
+      - html.H5: 'Satellite Flythrough'
+      - html.Div:
+          id: model-select
+          children: select model
 
 # Another variable we'll use to populate dropdown options
 click_me:
@@ -82,28 +91,41 @@ layout:
       - dcc.Store: # highest level storage
           id: workflow-store
       - dcc.Store: # workflow-dependent storage
-          id: save-state
-      - dbc.Row:
+          id: click-store
+      - dbc.Container:
           children:
-          - dbc.Col:
+          - dbc.Row:
               children:
-                html.H3: Select Workflow
-              width:
-                size: 3
-                # offset: 3
-          - dbc.Col:
-              width:
-                size: 3
+              - dbc.Col:
+                  children:
+                    html.H3: Select Workflow
+                  width:
+                    size: 3
+                    # offset: 3
+              - dbc.Col:
+                  width:
+                    size: 3
+                  children:
+                  - dcc.Dropdown:
+                      id: dropdown
+                      clearable: False
+          - dbc.Row:
               children:
-              - dcc.Dropdown:
-                  id: dropdown
-          - dbc.Col:
-              width:
-                size: 3
-              id: content
+              - dbc.Col:
+                  id: models
+              - dbc.Col:
+                  id: content
 
 
 callbacks:
+  update_models:
+    input:
+      - id: dropdown
+        attr: value
+    output:
+      - id: models
+        attr: children
+
   update_dropdown:
     input:
       - id: url
@@ -118,33 +140,33 @@ callbacks:
     input:
       - id: dropdown
         attr: value
-    state:
-      - id: workflow-store
-        attr: data
+    # state:
+    #   - id: workflow-store
+    #     attr: data
     output:
       - id: content
         attr: children
-      - id: workflow-store
-        attr: data
+      # - id: workflow-store
+      #   attr: data
 
-  update_save_state:
+  update_click_store:
     input:
       - id: click-me
         attr: n_clicks
     state:
-      - id: save-state
+      - id: click-store
         attr: data
     output:
-      - id: save-state
+      - id: click-store
         attr: data
 
 
   render_click_content:
     input:
-      - id: save-state
+      - id: click-store
         attr: modified_timestamp
     state:
-      - id: save-state
+      - id: click-store
         attr: data
     output:
       - id: click-content

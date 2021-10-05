@@ -5,6 +5,11 @@ from omegaconf import OmegaConf
 import numpy as np
 import dash_bootstrap_components as dbc
 from dash.exceptions import PreventUpdate
+import hydra
+import dash_html_components as html
+from dash_katex import DashKatex
+
+import re
 
 # +
 conf = load_conf('dynamic_data.yaml')
@@ -26,9 +31,47 @@ if 'callbacks' in conf:
     callbacks = get_callbacks(app, conf['callbacks'])
     assign_callbacks(callbacks, conf['callbacks'])
 
+def load_models(conf):
+    models = {}
+    if 'models' in conf:
+        for _ in conf['models']:
+            model_confs = OmegaConf.load(_)
+            for model_name in model_confs:
+                model_conf = model_confs[model_name]
+                models[model_name] = hydra.utils.instantiate(model_conf)
+        return models
+
+# models = load_models(conf)
+workflow_models = {}
+for workflow_name in conf['workflows']:
+    workflow = conf['workflows'][workflow_name]
+    if workflow is None:
+        continue
+    workflow_models[workflow_name] = load_models(workflow)
+
+
+
+@callbacks.update_models
+def update_models(workflow):
+    if workflow not in workflow_models:
+        raise PreventUpdate
+    children = []
+    models = workflow_models[workflow]
+    for _ in models:
+        model = models[_]
+        model_children = [html.H2(_)]
+
+        for _ in model.signatures:
+            latex_str = model.to_latex(_, mode='inline').replace('$','')
+            latex_str = re.sub(r"\\\\",r"\\", latex_str)
+            model_children.append(DashKatex(expression=latex_str))
+        model_children.append(html.Details([html.Summary('model docstring'), model.__doc__]))
+        children.append(html.Div(model_children))
+    return children
 
 @callbacks.update_dropdown
 def update_dropdown(url):
+    """get available workflow options from the conf"""
     options = []
     value = ''
     for _ in conf:
@@ -39,49 +82,47 @@ def update_dropdown(url):
 
 
 @callbacks.update_content
-def update_content(value, data):
-    # this needs to initialize content or load current state of buttons (e.g. n_clicks)
-    if value is None:
+def update_content(workflow):
+    """load the workflow from the configuration"""
+    if workflow is None:
         raise PreventUpdate
-    if data is None:
-        data = dict(workflow=value)
-        data[value] = conf[value] # store initial params
-    else:
-        params = data[value]['params'] # get current parameters
 
-    params = conf[value]
+    workflow_components = load_components(conf[workflow], imports)
+    return workflow_components
 
-    return load_components(conf[value], imports), data
-
-@callbacks.update_save_state
-def update_save_state(n_clicks, data):
+@callbacks.update_click_store
+def update_click_store(n_clicks, data):
     if n_clicks is None:
+        print('n_clicks not initialized')
+        raise PreventUpdate
+    if n_clicks == 0:
         raise PreventUpdate
 
     if data is None:
-        data = {'children': [], 'n_clicks': 0}
-    else:
-        previous_clicks = data['n_clicks']
+        data = dict(rows={}, n_clicks=0)
 
-    for i in range(n_clicks):
-        if i >= previous_clicks:
-            data['children'].append(dict(
-                id='my-graph-{}'.format(i),
-                children='Graph {}'.format(i),
-                ))
-    print(data['n_clicks'])
-    for _ in data['children']:
-        print(' {}'.format(_))
+    rows = data.get('rows', dict())
+    row_number = len(rows)
 
-    data['n_clicks'] = n_clicks
+    print('new row_number: {}'.format(row_number))
+    data['rows'][row_number] = dict(
+        id='my-graph-{}'.format(row_number),
+        children='Graph {}'.format(row_number),
+        )
+
+    print('updated rows: {}'.format(len(data['rows'])))
+    for _, row in data['rows'].items():
+        print(' {}: {}'.format(_, row))
+
     return data
 
 @callbacks.render_click_content
 def render_click_content(ts, data):
+    """whenever timestamp changes, render the current list of clicks"""
     if ts is None:
         raise PreventUpdate
     children = []
-    for params in data['children']:
+    for _, params in data['rows'].items():
         children.append(dbc.ListGroupItem(
             dbc.Button(color='primary',**params)))
     return dbc.ListGroup(children)

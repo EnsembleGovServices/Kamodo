@@ -1,3 +1,4 @@
+* latex rendering, dynamic data
 
 ### 2021-10-05 10:27:34.390221: clock-in
 
