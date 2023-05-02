@@ -1,0 +1,186 @@
+import:
+  dcc: dash_core_components
+  html: dash_html_components
+  dbc: dash_bootstrap_components
+
+external_stylesheets:
+  - assets/css/dashboard.css
+  - https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css
+
+external_scripts:
+  - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML
+  - assets/js/dashboard.js
+  - https://code.jquery.com/jquery-3.6.0.js
+  - https://code.jquery.com/ui/1.12.1/jquery-ui.js
+  - https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js
+
+
+app:
+  dash.Dash:
+    external_stylesheets: ${external_stylesheets}
+    external_scripts: ${external_scripts}
+    title: kamodo-dashboard
+    suppress_callback_exceptions: True
+
+run_server:
+  host: '0.0.0.0'
+  port: 8060
+  extra_files:
+    - dynamic_callbacks.yaml
+  debug: True
+  dev_tools_hot_reload: False
+
+# define custom variables to be referenced in app
+workflows:
+  flythrough:
+    models:
+      - models_flythrough.yaml
+  click_me:
+    models:
+      - modelsB.yaml
+  another_button:
+
+variables:
+  dbc.Form:
+    children:
+    - dbc.FormGroup:
+        children:
+        - dbc.Label: Toggle a bunch
+        - dbc.Checklist:
+            options:
+              - label: option 1
+                value: 1
+              - label: option 2
+                value: 2
+            value: [1]
+            switch: True
+
+flythrough:
+  html.Div:
+    children:
+      - html.H5: 'Satellite Flythrough'
+      - ${variables}
+
+# Another variable we'll use to populate dropdown options
+click_me:
+  html.Div:
+    children:
+      - dbc.Button:
+          id: click-me
+          children: click me
+          color: primary
+          n_clicks: 0
+          # className:
+      - html.Div:
+          id: click-content
+
+# Another example variable
+another_button:
+  html.Div:
+    children:
+      - dbc.Button:
+          id: another-button
+          children: another click
+          color: primary
+      - html.Div:
+          id: another-content
+
+my_item:
+  dbc.ListGroupItem:
+    children: 'Item {i}'
+    id: my-item-{i}
+
+# keep the initial layout minimal
+# we will dynamically update the layout based on user interaction
+layout:
+  html.Div:
+    id: layout
+    children:
+      - dcc.Location:
+          id: url
+      - dcc.Store:
+          id: model-store
+      - dcc.Store:
+          id: click-store
+      - dbc.Container:
+          children:
+          - dbc.Row:
+              children:
+              - dbc.Col:
+                  children:
+                    html.H3: Select Workflow
+                  width:
+                    size: 3
+                    # offset: 3
+              - dbc.Col:
+                  width:
+                    size: 3
+                  children:
+                  - dcc.Dropdown:
+                      id: dropdown
+                      clearable: False
+          - dbc.Row:
+              children:
+              - dbc.Col:
+                  id: models
+                  width:
+                    size: 3
+              - dbc.Col:
+                  id: content
+
+
+callbacks:
+  update_models:
+    input:
+      - id: dropdown
+        attr: value
+    output:
+      - id: models
+        attr: children
+
+  update_dropdown:
+    input:
+      - id: url
+        attr: pathname
+    output:
+      - id: dropdown
+        attr: options
+      - id: dropdown
+        attr: value
+
+  update_content:
+    input:
+      - id: dropdown
+        attr: value
+    # state:
+    #   - id: workflow-store
+    #     attr: data
+    output:
+      - id: content
+        attr: children
+      # - id: workflow-store
+      #   attr: data
+
+  update_click_store:
+    input:
+      - id: click-me
+        attr: n_clicks
+    state:
+      - id: click-store
+        attr: data
+    output:
+      - id: click-store
+        attr: data
+
+
+  render_click_content:
+    input:
+      - id: click-store
+        attr: modified_timestamp
+    state:
+      - id: click-store
+        attr: data
+    output:
+      - id: click-content
+        attr: children
+

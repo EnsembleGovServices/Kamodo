@@ -1,0 +1,11 @@
+model3:
+  class: kamodo.Kamodo
+  params:
+    f: y**2 - x - 1
+    g: sin(x)
+
+model4:
+  class: kamodo.Kamodo
+  params:
+    h: x**2 - z - 1
+    f: sin(y)
